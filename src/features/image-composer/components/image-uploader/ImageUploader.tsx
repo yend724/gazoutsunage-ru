@@ -2,16 +2,16 @@
 
 import { useCallback } from 'react';
 import { tv } from 'tailwind-variants';
-import type { UploadedImage } from '../types';
+import type { UploadedImage } from '../../types';
 
 const imageUploaderStyles = tv({
   slots: {
     container: 'w-full',
-    dropzone: 'border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer transition-colors hover:border-gray-400 hover:bg-gray-50',
-    dropzoneActive: 'border-blue-500 bg-blue-50',
+    dropzone: 'border-3 border-dashed border-purple-200 rounded-2xl p-12 text-center cursor-pointer transition-all duration-300 hover:border-purple-300 hover:bg-purple-50/50 backdrop-blur-sm',
+    dropzoneActive: 'border-purple-400 bg-purple-100/70 transform scale-[1.02]',
     input: 'hidden',
-    text: 'text-gray-600',
-    button: 'mt-4 px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors'
+    text: 'text-gray-700 text-lg font-medium',
+    button: 'mt-6 px-8 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl hover:from-purple-600 hover:to-pink-600 transition-all duration-300 shadow-lg shadow-purple-500/25 font-semibold cursor-pointer'
   }
 });
 

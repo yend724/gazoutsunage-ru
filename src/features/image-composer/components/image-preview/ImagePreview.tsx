@@ -3,18 +3,18 @@
 import Image from 'next/image';
 import { useState } from 'react';
 import { tv } from 'tailwind-variants';
-import type { UploadedImage } from '../types';
+import type { UploadedImage } from '../../types';
 
 const imagePreviewStyles = tv({
   slots: {
-    container: 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4',
-    item: 'relative group cursor-move',
-    dragging: 'opacity-50 transform scale-95 z-10',
-    dragOver: 'border-2 border-blue-400 border-dashed bg-blue-50',
-    image: 'w-full h-32 object-cover rounded-lg pointer-events-none',
-    removeButton: 'absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer hover:bg-red-600 z-20',
-    info: 'text-xs text-gray-600 mt-1 text-center',
-    orderIndicator: 'absolute top-2 left-2 bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold'
+    container: 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6',
+    item: 'relative group cursor-move bg-white/80 backdrop-blur-sm rounded-2xl p-3 transition-all duration-300 hover:shadow-xl border border-white/30',
+    dragging: 'opacity-70 transform scale-95 z-10 rotate-3',
+    dragOver: 'border-2 border-purple-400 border-dashed bg-purple-50/80 transform scale-105',
+    image: 'w-full h-32 object-cover rounded-xl pointer-events-none shadow-md',
+    removeButton: 'absolute -top-2 -right-2 bg-gradient-to-r from-red-400 to-pink-500 text-white rounded-full w-8 h-8 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 cursor-pointer hover:from-red-500 hover:to-pink-600 z-20 shadow-lg',
+    info: 'text-sm text-gray-600 mt-2 text-center font-medium',
+    orderIndicator: 'absolute -top-2 -left-2 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold shadow-lg'
   }
 });
 

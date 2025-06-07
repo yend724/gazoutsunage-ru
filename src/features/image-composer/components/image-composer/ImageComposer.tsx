@@ -2,29 +2,29 @@
 
 import { useState, useCallback } from 'react';
 import { tv } from 'tailwind-variants';
-import { ImageUploader } from './ImageUploader';
-import { ImagePreview } from './ImagePreview';
-import { ComposerSettings } from './ComposerSettings';
-import { composeImages } from '../utils/imageComposer';
-import type { UploadedImage, ComposedImageSettings } from '../types';
+import { ImageUploader } from '../image-uploader';
+import { ImagePreview } from '../image-preview';
+import { ComposerSettings } from '../composer-settings';
+import { composeImages } from '../../utils/imageComposer';
+import type { UploadedImage, ComposedImageSettings } from '../../types';
 
 const composerStyles = tv({
   slots: {
-    container: 'max-w-7xl mx-auto p-6 space-y-8',
-    header: 'text-center',
-    title: 'text-3xl font-bold text-gray-900',
-    subtitle: 'text-gray-600 mt-2',
+    container: 'max-w-7xl mx-auto p-6 space-y-10',
+    header: 'text-center mb-12',
+    title: 'text-5xl font-extrabold text-white mb-4 drop-shadow-lg',
+    subtitle: 'text-xl text-white font-medium drop-shadow-md',
     content: 'grid grid-cols-1 lg:grid-cols-3 gap-8',
-    mainSection: 'lg:col-span-2 space-y-6',
-    sideSection: 'space-y-6',
-    section: 'bg-white rounded-lg shadow-md p-6',
-    sectionTitle: 'text-xl font-semibold mb-4',
-    buttonContainer: 'flex gap-4',
-    button: 'px-6 py-3 rounded-md font-medium transition-colors',
-    primaryButton: 'bg-blue-500 text-white hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed',
-    secondaryButton: 'bg-gray-200 text-gray-700 hover:bg-gray-300',
-    previewContainer: 'mt-4 overflow-auto max-h-96 max-w-full border border-gray-200 rounded-lg p-4',
-    previewImage: 'block rounded-lg shadow-lg'
+    mainSection: 'lg:col-span-2 space-y-8',
+    sideSection: 'space-y-8',
+    section: 'bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-white/20 p-8 transition-all duration-300 hover:shadow-2xl',
+    sectionTitle: 'text-2xl font-bold mb-6 text-gray-800',
+    buttonContainer: 'flex gap-4 flex-wrap',
+    button: 'px-8 py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg cursor-pointer',
+    primaryButton: 'bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed shadow-purple-500/25',
+    secondaryButton: 'bg-white/80 text-gray-700 border-2 border-gray-200 hover:bg-white hover:border-purple-300 hover:text-purple-600 shadow-gray-200/50',
+    previewContainer: 'mt-6 overflow-auto max-h-96 max-w-full border-2 border-purple-100 rounded-2xl p-6 bg-gradient-to-br from-gray-50 to-white',
+    previewImage: 'block rounded-xl shadow-2xl border border-white/50'
   }
 });
 
@@ -116,6 +116,12 @@ export function ImageComposer() {
             <ImageUploader onImagesUploaded={handleImagesUploaded} />
           </section>
 
+          <aside className={`${styles.sideSection()} lg:hidden`}>
+            <section className={styles.section()}>
+              <ComposerSettings settings={settings} onChange={setSettings} />
+            </section>
+          </aside>
+
           {images.length > 0 && (
             <section className={styles.section()}>
               <h2 className={styles.sectionTitle()}>
@@ -126,25 +132,24 @@ export function ImageComposer() {
                 onRemove={handleRemoveImage} 
                 onReorder={handleReorderImages}
               />
+              <div className={`${styles.buttonContainer()} mt-6`}>
+                  <button
+                    className={`${styles.button()} ${styles.primaryButton()}`}
+                    onClick={handleCompose}
+                    disabled={images.length === 0 || isComposing}
+                  >
+                    {isComposing ? '合成中...' : '画像を合成'}
+                  </button>
+                  <button
+                    className={`${styles.button()} ${styles.secondaryButton()}`}
+                    onClick={handleReset}
+                    disabled={images.length === 0 && !composedImageUrl}
+                  >
+                    リセット
+                  </button>
+                </div>
             </section>
           )}
-
-          <div className={styles.buttonContainer()}>
-            <button
-              className={`${styles.button()} ${styles.primaryButton()}`}
-              onClick={handleCompose}
-              disabled={images.length === 0 || isComposing}
-            >
-              {isComposing ? '合成中...' : '画像を合成'}
-            </button>
-            <button
-              className={`${styles.button()} ${styles.secondaryButton()}`}
-              onClick={handleReset}
-              disabled={images.length === 0 && !composedImageUrl}
-            >
-              リセット
-            </button>
-          </div>
 
           {composedImageUrl && (
             <section className={styles.section()}>
@@ -156,7 +161,7 @@ export function ImageComposer() {
                   className={styles.previewImage()}
                 />
               </div>
-              <div className={styles.buttonContainer()}>
+              <div className={`${styles.buttonContainer()} mt-6`}>
                 <button
                   className={`${styles.button()} ${styles.primaryButton()}`}
                   onClick={handleDownload}
@@ -168,7 +173,7 @@ export function ImageComposer() {
           )}
         </div>
 
-        <aside className={styles.sideSection()}>
+        <aside className={`${styles.sideSection()} hidden lg:block`}>
           <section className={styles.section()}>
             <ComposerSettings settings={settings} onChange={setSettings} />
           </section>

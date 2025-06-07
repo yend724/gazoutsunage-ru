@@ -1,16 +1,14 @@
 'use client';
 
 import { tv } from 'tailwind-variants';
-import type { ComposedImageSettings } from '../types';
+import type { ComposedImageSettings } from '../../types';
 
 const settingsStyles = tv({
   slots: {
-    container: 'bg-gray-50 rounded-lg p-6 space-y-4',
-    group: 'space-y-2',
-    label: 'block text-sm font-medium text-gray-700',
-    input: 'w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500',
-    select: 'w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500',
-    colorInput: 'h-10 cursor-pointer'
+    group: 'space-y-3',
+    label: 'block text-sm font-bold text-gray-800',
+    input: 'w-full px-4 py-3 border-2 border-purple-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 bg-white/90 backdrop-blur-sm',
+    select: 'w-full px-4 py-3 border-2 border-purple-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 bg-white/90 backdrop-blur-sm'
   }
 });
 
@@ -30,9 +28,9 @@ export function ComposerSettings({ settings, onChange }: ComposerSettingsProps) 
   };
 
   return (
-    <div className={styles.container()}>
+    <div>
       <h3 className="text-lg font-semibold mb-4">合成設定</h3>
-      
+
       <div className={styles.group()}>
         <label className={styles.label()}>レイアウト</label>
         <select
@@ -90,15 +88,6 @@ export function ComposerSettings({ settings, onChange }: ComposerSettingsProps) 
         />
       </div>
 
-      <div className={styles.group()}>
-        <label className={styles.label()}>背景色</label>
-        <input
-          type="color"
-          className={`${styles.input()} ${styles.colorInput()}`}
-          value={settings.backgroundColor}
-          onChange={(e) => handleChange('backgroundColor', e.target.value)}
-        />
-      </div>
 
     </div>
   );
