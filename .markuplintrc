@@ -1,0 +1,12 @@
+{
+  "extends": ["@markuplint/react-spec"],
+  "rules": {
+    "required-h1": false,
+    "heading-levels": false
+  },
+  "excludeFiles": [
+    "node_modules/**",
+    ".next/**",
+    "**/*.d.ts"
+  ]
+}

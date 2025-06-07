@@ -5,6 +5,7 @@ import type { ComposedImageSettings } from '../../types';
 
 const settingsStyles = tv({
   slots: {
+    container: 'space-y-6',
     group: 'space-y-3',
     label: 'block text-sm font-bold text-gray-800',
     input: 'w-full px-4 py-3 border-2 border-purple-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 bg-white/90 backdrop-blur-sm',
@@ -28,12 +29,13 @@ export function ComposerSettings({ settings, onChange }: ComposerSettingsProps) 
   };
 
   return (
-    <div>
-      <h3 className="text-lg font-semibold mb-4">合成設定</h3>
+    <div className={styles.container()}>
+      <h3 className="text-lg font-semibold mb-6">合成設定</h3>
 
       <div className={styles.group()}>
-        <label className={styles.label()}>レイアウト</label>
+        <label htmlFor="layout" className={styles.label()}>レイアウト</label>
         <select
+          id="layout"
           className={styles.select()}
           value={settings.layout}
           onChange={(e) => handleChange('layout', e.target.value as ComposedImageSettings['layout'])}
@@ -46,8 +48,9 @@ export function ComposerSettings({ settings, onChange }: ComposerSettingsProps) 
 
       {settings.layout === 'grid' && (
         <div className={styles.group()}>
-          <label className={styles.label()}>列数</label>
+          <label htmlFor="columns" className={styles.label()}>列数</label>
           <input
+            id="columns"
             type="number"
             className={styles.input()}
             value={settings.columns || 2}
@@ -60,8 +63,9 @@ export function ComposerSettings({ settings, onChange }: ComposerSettingsProps) 
 
       {(settings.layout === 'horizontal' || settings.layout === 'vertical') && (
         <div className={styles.group()}>
-          <label className={styles.label()}>サイズ調整</label>
+          <label htmlFor="sizeMode" className={styles.label()}>サイズ調整</label>
           <select
+            id="sizeMode"
             className={styles.select()}
             value={settings.sizeMode || 'default'}
             onChange={(e) => handleChange('sizeMode', e.target.value as 'default' | 'minimum')}
@@ -77,8 +81,9 @@ export function ComposerSettings({ settings, onChange }: ComposerSettingsProps) 
       )}
 
       <div className={styles.group()}>
-        <label className={styles.label()}>画像間の余白 (px)</label>
+        <label htmlFor="gap" className={styles.label()}>画像間の余白 (px)</label>
         <input
+          id="gap"
           type="number"
           className={styles.input()}
           value={settings.gap}
