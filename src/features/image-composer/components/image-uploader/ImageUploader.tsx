@@ -7,12 +7,14 @@ import type { UploadedImage } from '../../types';
 const imageUploaderStyles = tv({
   slots: {
     container: 'w-full',
-    dropzone: 'border-3 border-dashed border-purple-200 rounded-2xl p-12 text-center cursor-pointer transition-all duration-300 hover:border-purple-300 hover:bg-purple-50/50 backdrop-blur-sm',
+    dropzone:
+      'border-3 border-dashed border-purple-200 rounded-2xl p-12 text-center cursor-pointer transition-all duration-300 hover:border-purple-300 hover:bg-purple-50/50 backdrop-blur-sm',
     dropzoneActive: 'border-purple-400 bg-purple-100/70 transform scale-[1.02]',
     input: 'hidden',
     text: 'text-gray-700 text-lg font-medium',
-    button: 'mt-6 px-8 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl hover:from-purple-600 hover:to-pink-600 transition-all duration-300 shadow-lg shadow-purple-500/25 font-semibold cursor-pointer'
-  }
+    button:
+      'mt-6 px-8 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl hover:from-purple-600 hover:to-pink-600 transition-all duration-300 shadow-lg shadow-purple-500/25 font-semibold cursor-pointer',
+  },
 });
 
 interface ImageUploaderProps {
@@ -22,40 +24,46 @@ interface ImageUploaderProps {
 export function ImageUploader({ onImagesUploaded }: ImageUploaderProps) {
   const styles = imageUploaderStyles();
 
-  const handleFileChange = useCallback(async (files: FileList | null) => {
-    if (!files) return;
+  const handleFileChange = useCallback(
+    async (files: FileList | null) => {
+      if (!files) return;
 
-    const newImages: UploadedImage[] = [];
+      const newImages: UploadedImage[] = [];
 
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      if (!file.type.startsWith('image/')) continue;
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        if (!file.type.startsWith('image/')) continue;
 
-      const url = URL.createObjectURL(file);
-      const img = new Image();
-      
-      await new Promise((resolve) => {
-        img.onload = resolve;
-        img.src = url;
-      });
+        const url = URL.createObjectURL(file);
+        const img = new Image();
 
-      newImages.push({
-        id: `${Date.now()}-${i}`,
-        file,
-        url,
-        width: img.width,
-        height: img.height,
-        order: i
-      });
-    }
+        await new Promise(resolve => {
+          img.onload = resolve;
+          img.src = url;
+        });
 
-    onImagesUploaded(newImages);
-  }, [onImagesUploaded]);
+        newImages.push({
+          id: `${Date.now()}-${i}`,
+          file,
+          url,
+          width: img.width,
+          height: img.height,
+          order: i,
+        });
+      }
 
-  const handleDrop = useCallback((e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    handleFileChange(e.dataTransfer.files);
-  }, [handleFileChange]);
+      onImagesUploaded(newImages);
+    },
+    [onImagesUploaded]
+  );
+
+  const handleDrop = useCallback(
+    (e: React.DragEvent<HTMLDivElement>) => {
+      e.preventDefault();
+      handleFileChange(e.dataTransfer.files);
+    },
+    [handleFileChange]
+  );
 
   const handleDragOver = useCallback((e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -72,13 +80,11 @@ export function ImageUploader({ onImagesUploaded }: ImageUploaderProps) {
         <p className={styles.text()}>
           画像をドラッグ＆ドロップするか、クリックして選択してください
         </p>
-        <p className="text-sm text-gray-500 mt-2">
-          複数の画像を選択できます
-        </p>
+        <p className="text-sm text-gray-500 mt-2">複数の画像を選択できます</p>
         <button
           type="button"
           className={styles.button()}
-          onClick={(e) => {
+          onClick={e => {
             e.stopPropagation();
             document.getElementById('image-input')?.click();
           }}
@@ -92,7 +98,7 @@ export function ImageUploader({ onImagesUploaded }: ImageUploaderProps) {
         multiple
         accept="image/*"
         className={styles.input()}
-        onChange={(e) => handleFileChange(e.target.files)}
+        onChange={e => handleFileChange(e.target.files)}
       />
     </div>
   );

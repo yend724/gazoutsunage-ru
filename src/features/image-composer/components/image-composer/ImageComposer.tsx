@@ -19,9 +19,10 @@ const composerStyles = tv({
     mainSection: 'lg:col-span-2 space-y-8',
     sideSection: 'space-y-8',
     buttonContainer: 'flex gap-4 flex-wrap mt-6',
-    previewContainer: 'mt-6 overflow-auto max-h-96 max-w-full border-2 border-purple-100 rounded-2xl p-6 bg-gradient-to-br from-gray-50 to-white',
-    previewImage: 'block rounded-xl shadow-2xl border border-white/50'
-  }
+    previewContainer:
+      'mt-6 overflow-auto max-h-96 max-w-full border-2 border-purple-100 rounded-2xl p-6 bg-gradient-to-br from-gray-50 to-white',
+    previewImage: 'block rounded-xl shadow-2xl border border-white/50',
+  },
 });
 
 export function ImageComposer() {
@@ -31,7 +32,7 @@ export function ImageComposer() {
     layout: 'horizontal',
     gap: 0,
     backgroundColor: '#ffffff',
-    columns: 2
+    columns: 2,
   });
   const [composedImageUrl, setComposedImageUrl] = useState<string | null>(null);
   const [isComposing, setIsComposing] = useState(false);
@@ -46,20 +47,23 @@ export function ImageComposer() {
     setComposedImageUrl(null);
   }, []);
 
-  const handleReorderImages = useCallback((dragIndex: number, dropIndex: number) => {
-    setImages(prev => {
-      const newImages = [...prev];
-      const draggedImage = newImages[dragIndex];
-      newImages.splice(dragIndex, 1);
-      newImages.splice(dropIndex, 0, draggedImage);
-      
-      return newImages.map((img, index) => ({
-        ...img,
-        order: index
-      }));
-    });
-    setComposedImageUrl(null);
-  }, []);
+  const handleReorderImages = useCallback(
+    (dragIndex: number, dropIndex: number) => {
+      setImages(prev => {
+        const newImages = [...prev];
+        const draggedImage = newImages[dragIndex];
+        newImages.splice(dragIndex, 1);
+        newImages.splice(dropIndex, 0, draggedImage);
+
+        return newImages.map((img, index) => ({
+          ...img,
+          order: index,
+        }));
+      });
+      setComposedImageUrl(null);
+    },
+    []
+  );
 
   const handleCompose = async () => {
     if (images.length === 0) return;
@@ -100,9 +104,7 @@ export function ImageComposer() {
     <div className={styles.container()}>
       <header className={styles.header()}>
         <h1 className={styles.title()}>ガゾウツナゲール</h1>
-        <p className={styles.subtitle()}>
-          複数の画像を1つにつなげます
-        </p>
+        <p className={styles.subtitle()}>複数の画像を1つにつなげます</p>
       </header>
 
       <div className={styles.content()}>
@@ -119,9 +121,9 @@ export function ImageComposer() {
 
           {images.length > 0 && (
             <Card title={`アップロードされた画像 (${images.length}枚)`}>
-              <ImagePreview 
-                images={images} 
-                onRemove={handleRemoveImage} 
+              <ImagePreview
+                images={images}
+                onRemove={handleRemoveImage}
                 onReorder={handleReorderImages}
               />
               <div className={styles.buttonContainer()}>
@@ -153,10 +155,7 @@ export function ImageComposer() {
                 />
               </div>
               <div className={styles.buttonContainer()}>
-                <Button
-                  variant="primary"
-                  onClick={handleDownload}
-                >
+                <Button variant="primary" onClick={handleDownload}>
                   ダウンロード
                 </Button>
               </div>

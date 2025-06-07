@@ -1,1 +1,5 @@
-export { composeImages, calculateCanvasSize, calculateImagePositions } from './imageComposer';
+export {
+  composeImages,
+  calculateCanvasSize,
+  calculateImagePositions,
+} from './imageComposer';

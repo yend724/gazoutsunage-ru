@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "markuplint": "markuplint \"src/**/*.tsx\""
+    "markuplint": "markuplint \"src/**/*.tsx\"",
+    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,css,md}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json,css,md}\""
   },
   "dependencies": {
     "clsx": "^2.1.1",
@@ -18,11 +20,15 @@
   },
   "devDependencies": {
     "@markuplint/react-spec": "^4.5.19",
+    "@next/eslint-plugin-next": "^15.3.3",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "eslint": "^9.28.0",
+    "eslint-config-next": "^15.3.3",
     "markuplint": "^4.12.0",
+    "prettier": "^3.5.3",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
