@@ -7,9 +7,9 @@ const buttonStyles = tv({
   variants: {
     variant: {
       primary:
-        'bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed shadow-purple-500/25',
+        'bg-gradient-to-r from-slate-600 to-slate-700 text-white hover:from-slate-700 hover:to-slate-800 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed shadow-slate-500/25',
       secondary:
-        'bg-white/80 text-gray-700 border-2 border-gray-200 hover:bg-white hover:border-purple-300 hover:text-purple-600 shadow-gray-200/50',
+        'bg-white/80 text-gray-700 border-2 border-gray-200 hover:bg-white hover:border-slate-300 hover:text-slate-600 shadow-gray-200/50',
     },
   },
   defaultVariants: {

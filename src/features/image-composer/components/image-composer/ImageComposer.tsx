@@ -13,14 +13,14 @@ const composerStyles = tv({
   slots: {
     container: 'max-w-7xl mx-auto p-6 space-y-10',
     header: 'text-center mb-12',
-    title: 'text-5xl font-extrabold text-white mb-4 drop-shadow-lg',
-    subtitle: 'text-xl text-white font-medium drop-shadow-md',
+    title: 'text-3xl font-bold text-gray-800 mb-4',
+    subtitle: 'text-lg text-gray-600 font-medium',
     content: 'grid grid-cols-1 lg:grid-cols-3 gap-8',
     mainSection: 'lg:col-span-2 space-y-8',
     sideSection: 'space-y-8',
     buttonContainer: 'flex gap-4 flex-wrap mt-6',
     previewContainer:
-      'mt-6 overflow-auto max-h-96 max-w-full border-2 border-purple-100 rounded-2xl p-6 bg-gradient-to-br from-gray-50 to-white',
+      'mt-6 overflow-auto max-h-96 max-w-full border-2 border-gray-200 rounded-2xl p-6 bg-gradient-to-br from-gray-50 to-white',
     previewImage: 'block rounded-xl shadow-2xl border border-white/50',
   },
 });

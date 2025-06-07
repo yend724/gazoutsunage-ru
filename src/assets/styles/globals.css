@@ -1,7 +1,7 @@
 @import 'tailwindcss';
 
 :root {
-  --background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --background: linear-gradient(135deg, #fafbff 0%, #e8f4fd 50%, #dbeafe 100%);
   --foreground: #1f2937;
   --card-bg: rgba(255, 255, 255, 0.95);
   --shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
@@ -36,19 +36,24 @@ body::before {
   bottom: 0;
   background:
     radial-gradient(
-      circle at 20% 80%,
-      rgba(120, 119, 198, 0.3) 0%,
-      transparent 50%
+      ellipse at 20% 80%,
+      rgba(96, 165, 250, 0.2) 0%,
+      transparent 60%
     ),
     radial-gradient(
-      circle at 80% 20%,
-      rgba(255, 255, 255, 0.15) 0%,
-      transparent 50%
+      ellipse at 80% 20%,
+      rgba(139, 92, 246, 0.15) 0%,
+      transparent 60%
     ),
     radial-gradient(
-      circle at 40% 40%,
-      rgba(120, 119, 198, 0.2) 0%,
-      transparent 50%
+      ellipse at 60% 60%,
+      rgba(59, 130, 246, 0.1) 0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse at 30% 30%,
+      rgba(255, 255, 255, 0.3) 0%,
+      transparent 40%
     );
   pointer-events: none;
   z-index: -1;

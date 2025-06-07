@@ -10,13 +10,13 @@ const imagePreviewStyles = tv({
     item: 'relative group cursor-move bg-white/80 backdrop-blur-sm rounded-2xl p-3 transition-all duration-300 hover:shadow-xl border border-white/30',
     dragging: 'opacity-70 transform scale-95 z-10 rotate-3',
     dragOver:
-      'border-2 border-purple-400 border-dashed bg-purple-50/80 transform scale-105',
+      'border-2 border-slate-400 border-dashed bg-slate-50/80 transform scale-105',
     image: 'w-full h-32 object-cover rounded-xl pointer-events-none shadow-md',
     removeButton:
-      'absolute -top-2 -right-2 bg-gradient-to-r from-red-400 to-pink-500 text-white rounded-full w-8 h-8 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 cursor-pointer hover:from-red-500 hover:to-pink-600 z-20 shadow-lg',
+      'absolute -top-2 -right-2 bg-gradient-to-r from-red-400 to-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 cursor-pointer hover:from-red-500 hover:to-red-600 z-20 shadow-lg',
     info: 'text-sm text-gray-600 mt-2 text-center font-medium',
     orderIndicator:
-      'absolute -top-2 -left-2 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold shadow-lg',
+      'absolute -top-2 -left-2 bg-gradient-to-r from-slate-500 to-slate-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold shadow-lg',
   },
 });
 

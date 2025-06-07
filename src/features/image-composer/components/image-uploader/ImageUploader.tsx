@@ -8,12 +8,12 @@ const imageUploaderStyles = tv({
   slots: {
     container: 'w-full',
     dropzone:
-      'border-3 border-dashed border-purple-200 rounded-2xl p-12 text-center cursor-pointer transition-all duration-300 hover:border-purple-300 hover:bg-purple-50/50 backdrop-blur-sm',
-    dropzoneActive: 'border-purple-400 bg-purple-100/70 transform scale-[1.02]',
+      'border-3 border-dashed border-gray-300 rounded-2xl p-12 text-center cursor-pointer transition-all duration-300 hover:border-slate-400 hover:bg-slate-50/50 backdrop-blur-sm',
+    dropzoneActive: 'border-slate-400 bg-slate-100/70 transform scale-[1.02]',
     input: 'hidden',
     text: 'text-gray-700 text-lg font-medium',
     button:
-      'mt-6 px-8 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl hover:from-purple-600 hover:to-pink-600 transition-all duration-300 shadow-lg shadow-purple-500/25 font-semibold cursor-pointer',
+      'mt-6 px-8 py-3 bg-gradient-to-r from-slate-600 to-slate-700 text-white rounded-xl hover:from-slate-700 hover:to-slate-800 transition-all duration-300 shadow-lg shadow-slate-500/25 font-semibold cursor-pointer',
   },
 });
 
