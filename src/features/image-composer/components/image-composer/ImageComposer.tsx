@@ -5,7 +5,8 @@ import { tv } from 'tailwind-variants';
 import { ImageUploader } from '../image-uploader';
 import { ImagePreview } from '../image-preview';
 import { ComposerSettings } from '../composer-settings';
-import { composeImages } from '../../utils/imageComposer';
+import { composeImages } from '../../utils/image-composer';
+import { Button, Card } from '../../../../shared/components';
 import type { UploadedImage, ComposedImageSettings } from '../../types';
 
 const composerStyles = tv({
@@ -17,12 +18,7 @@ const composerStyles = tv({
     content: 'grid grid-cols-1 lg:grid-cols-3 gap-8',
     mainSection: 'lg:col-span-2 space-y-8',
     sideSection: 'space-y-8',
-    section: 'bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-white/20 p-8 transition-all duration-300 hover:shadow-2xl',
-    sectionTitle: 'text-lg font-semibold mb-6 text-gray-800',
-    buttonContainer: 'flex gap-4 flex-wrap',
-    button: 'px-6 py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg cursor-pointer',
-    primaryButton: 'bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed shadow-purple-500/25',
-    secondaryButton: 'bg-white/80 text-gray-700 border-2 border-gray-200 hover:bg-white hover:border-purple-300 hover:text-purple-600 shadow-gray-200/50',
+    buttonContainer: 'flex gap-4 flex-wrap mt-6',
     previewContainer: 'mt-6 overflow-auto max-h-96 max-w-full border-2 border-purple-100 rounded-2xl p-6 bg-gradient-to-br from-gray-50 to-white',
     previewImage: 'block rounded-xl shadow-2xl border border-white/50'
   }
@@ -111,49 +107,44 @@ export function ImageComposer() {
 
       <div className={styles.content()}>
         <div className={styles.mainSection()}>
-          <section className={styles.section()}>
-            <h2 className={styles.sectionTitle()}>画像をアップロード</h2>
+          <Card title="画像をアップロード">
             <ImageUploader onImagesUploaded={handleImagesUploaded} />
-          </section>
+          </Card>
 
           <aside className={`${styles.sideSection()} lg:hidden`}>
-            <section className={styles.section()}>
+            <Card>
               <ComposerSettings settings={settings} onChange={setSettings} />
-            </section>
+            </Card>
           </aside>
 
           {images.length > 0 && (
-            <section className={styles.section()}>
-              <h2 className={styles.sectionTitle()}>
-                アップロードされた画像 ({images.length}枚)
-              </h2>
+            <Card title={`アップロードされた画像 (${images.length}枚)`}>
               <ImagePreview 
                 images={images} 
                 onRemove={handleRemoveImage} 
                 onReorder={handleReorderImages}
               />
-              <div className={`${styles.buttonContainer()} mt-6`}>
-                  <button
-                    className={`${styles.button()} ${styles.primaryButton()}`}
-                    onClick={handleCompose}
-                    disabled={images.length === 0 || isComposing}
-                  >
-                    {isComposing ? '合成中...' : '画像を合成'}
-                  </button>
-                  <button
-                    className={`${styles.button()} ${styles.secondaryButton()}`}
-                    onClick={handleReset}
-                    disabled={images.length === 0 && !composedImageUrl}
-                  >
-                    リセット
-                  </button>
-                </div>
-            </section>
+              <div className={styles.buttonContainer()}>
+                <Button
+                  variant="primary"
+                  onClick={handleCompose}
+                  disabled={images.length === 0 || isComposing}
+                >
+                  {isComposing ? '合成中...' : '画像を合成'}
+                </Button>
+                <Button
+                  variant="secondary"
+                  onClick={handleReset}
+                  disabled={images.length === 0 && !composedImageUrl}
+                >
+                  リセット
+                </Button>
+              </div>
+            </Card>
           )}
 
           {composedImageUrl && (
-            <section className={styles.section()}>
-              <h2 className={styles.sectionTitle()}>合成結果</h2>
+            <Card title="合成結果">
               <div className={styles.previewContainer()}>
                 <img
                   src={composedImageUrl}
@@ -161,22 +152,22 @@ export function ImageComposer() {
                   className={styles.previewImage()}
                 />
               </div>
-              <div className={`${styles.buttonContainer()} mt-6`}>
-                <button
-                  className={`${styles.button()} ${styles.primaryButton()}`}
+              <div className={styles.buttonContainer()}>
+                <Button
+                  variant="primary"
                   onClick={handleDownload}
                 >
                   ダウンロード
-                </button>
+                </Button>
               </div>
-            </section>
+            </Card>
           )}
         </div>
 
         <aside className={`${styles.sideSection()} hidden lg:block`}>
-          <section className={styles.section()}>
+          <Card>
             <ComposerSettings settings={settings} onChange={setSettings} />
-          </section>
+          </Card>
         </aside>
       </div>
     </div>
