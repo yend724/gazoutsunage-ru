@@ -19,7 +19,7 @@ const composerStyles = tv({
     sideSection: 'space-y-6',
     section: 'bg-white rounded-lg shadow-md p-6',
     sectionTitle: 'text-xl font-semibold mb-4',
-    buttonContainer: 'flex gap-4 justify-center',
+    buttonContainer: 'flex gap-4',
     button: 'px-6 py-3 rounded-md font-medium transition-colors',
     primaryButton: 'bg-blue-500 text-white hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed',
     secondaryButton: 'bg-gray-200 text-gray-700 hover:bg-gray-300',
