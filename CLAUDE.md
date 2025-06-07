@@ -19,6 +19,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **スタイリング**: Tailwind CSS 4 + Tailwind Variants
 - **アーキテクチャ**: Package by Features
 - **React**: v19
+- **開発ツール**: ESLint, Prettier, MarkupLint
 
 ## コマンド
 
@@ -34,6 +35,15 @@ npm start
 
 # Lintチェック
 npm run lint
+
+# Prettierによるコードフォーマット
+npm run format
+
+# Prettierフォーマットチェック
+npm run format:check
+
+# MarkupLintによるJSXのマークアップチェック
+npm run markuplint
 ```
 
 ## アーキテクチャと主要な実装
@@ -43,20 +53,27 @@ npm run lint
 src/
 ├── app/                    # Next.js App Router
 │   ├── layout.tsx         # ルートレイアウト (Geistフォント使用)
-│   ├── page.tsx           # ImageComposerを表示
-│   └── globals.css        # Tailwind CSS 4のインポート
-└── features/              
-    └── image-composer/    
-        ├── components/    
-        │   ├── ImageComposer.tsx      # メイン統合コンポーネント
-        │   ├── ImageUploader.tsx      # ドラッグ&ドロップ対応アップローダー
-        │   ├── ImagePreview.tsx       # グリッド表示とサムネイル
-        │   └── ComposerSettings.tsx   # 合成設定UI
-        ├── types/         
-        │   └── index.ts               # UploadedImage, ComposedImageSettings型定義
-        ├── utils/         
-        │   └── imageComposer.ts       # Canvas APIによる画像合成ロジック
-        └── index.ts                   # 公開APIのエクスポート
+│   └── page.tsx           # ImageComposerを表示
+├── assets/                 # 静的アセット
+│   ├── images/            # 画像ファイル
+│   └── styles/            
+│       └── globals.css    # Tailwind CSS 4のインポート
+├── features/              
+│   └── image-composer/    
+│       ├── components/    
+│       │   ├── ImageComposer.tsx      # メイン統合コンポーネント
+│       │   ├── ImageUploader.tsx      # ドラッグ&ドロップ対応アップローダー
+│       │   ├── ImagePreview.tsx       # グリッド表示とサムネイル
+│       │   └── ComposerSettings.tsx   # 合成設定UI
+│       ├── types/         
+│       │   └── index.ts               # UploadedImage, ComposedImageSettings型定義
+│       ├── utils/         
+│       │   └── imageComposer.ts       # Canvas APIによる画像合成ロジック
+│       └── index.ts                   # 公開APIのエクスポート
+└── shared/                # 共有コンポーネント
+    └── components/        
+        ├── button/        # 汎用ボタンコンポーネント
+        └── card/          # 汎用カードコンポーネント
 ```
 
 ### 画像合成の処理フロー
@@ -95,8 +112,24 @@ const styles = tv({
 - 画像リスト、設定、合成結果URLを`ImageComposer`で一元管理
 - メモリリークを防ぐため、不要になったObjectURLはrevokeする
 
+## 開発環境設定
+
+### ESLint設定
+- Next.js推奨設定を使用（`next/core-web-vitals`, `next/typescript`）
+- 設定ファイル: `.eslintrc.json`
+
+### Prettier設定
+- セミコロンあり、シングルクォート使用
+- 行幅80文字、インデント2スペース
+- 設定ファイル: `.prettierrc`
+
+### MarkupLint
+- JSXのマークアップ品質チェック
+- React仕様を使用
+
 ## 注意事項
 
 - Tailwind CSS 4を使用（設定ファイルなし、PostCSS経由）
 - すべての処理はクライアントサイドで完結
 - テストは未実装
+- 開発前にフォーマットとリントの実行を推奨
