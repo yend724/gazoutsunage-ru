@@ -1,5 +1,6 @@
 'use client';
 
+import { useId } from 'react';
 import { tv } from 'tailwind-variants';
 import type { ComposedImageSettings } from '../../types';
 
@@ -24,6 +25,7 @@ export function ComposerSettings({
   settings,
   onChange,
 }: ComposerSettingsProps) {
+  const id = useId();
   const styles = settingsStyles();
 
   const handleChange = <K extends keyof ComposedImageSettings>(
@@ -38,11 +40,11 @@ export function ComposerSettings({
       <h3 className="text-lg font-semibold mb-6">合成設定</h3>
 
       <div className={styles.group()}>
-        <label htmlFor="layout" className={styles.label()}>
+        <label htmlFor={`${id}-layout`} className={styles.label()}>
           レイアウト
         </label>
         <select
-          id="layout"
+          id={`${id}-layout`}
           className={styles.select()}
           value={settings.layout}
           onChange={e =>
@@ -60,11 +62,11 @@ export function ComposerSettings({
 
       {settings.layout === 'grid' && (
         <div className={styles.group()}>
-          <label htmlFor="columns" className={styles.label()}>
+          <label htmlFor={`${id}-columns`} className={styles.label()}>
             列数
           </label>
           <input
-            id="columns"
+            id={`${id}-columns`}
             type="number"
             className={styles.input()}
             value={settings.columns || 2}
@@ -77,11 +79,11 @@ export function ComposerSettings({
 
       {(settings.layout === 'horizontal' || settings.layout === 'vertical') && (
         <div className={styles.group()}>
-          <label htmlFor="sizeMode" className={styles.label()}>
+          <label htmlFor={`${id}-size-mode`} className={styles.label()}>
             サイズ調整
           </label>
           <select
-            id="sizeMode"
+            id={`${id}-size-mode`}
             className={styles.select()}
             value={settings.sizeMode || 'default'}
             onChange={e =>
@@ -103,11 +105,11 @@ export function ComposerSettings({
       )}
 
       <div className={styles.group()}>
-        <label htmlFor="gap" className={styles.label()}>
+        <label htmlFor={`${id}-gap`} className={styles.label()}>
           画像間の余白 (px)
         </label>
         <input
-          id="gap"
+          id={`${id}-gap`}
           type="number"
           className={styles.input()}
           value={settings.gap}
