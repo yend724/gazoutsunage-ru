@@ -50,6 +50,21 @@ export function ImageComposer() {
     setComposedImageUrl(null);
   }, []);
 
+  const handleReorderImages = useCallback((dragIndex: number, dropIndex: number) => {
+    setImages(prev => {
+      const newImages = [...prev];
+      const draggedImage = newImages[dragIndex];
+      newImages.splice(dragIndex, 1);
+      newImages.splice(dropIndex, 0, draggedImage);
+      
+      return newImages.map((img, index) => ({
+        ...img,
+        order: index
+      }));
+    });
+    setComposedImageUrl(null);
+  }, []);
+
   const handleCompose = async () => {
     if (images.length === 0) return;
 
@@ -106,7 +121,11 @@ export function ImageComposer() {
               <h2 className={styles.sectionTitle()}>
                 アップロードされた画像 ({images.length}枚)
               </h2>
-              <ImagePreview images={images} onRemove={handleRemoveImage} />
+              <ImagePreview 
+                images={images} 
+                onRemove={handleRemoveImage} 
+                onReorder={handleReorderImages}
+              />
             </section>
           )}
 
