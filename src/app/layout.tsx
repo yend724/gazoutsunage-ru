@@ -16,9 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
-      <body className="font-sans antialiased">
-        {children}
-      </body>
+      <body className="font-sans antialiased">{children}</body>
     </html>
   );
 }

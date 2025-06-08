@@ -1,5 +1,5 @@
-import { ImageComposer } from '@/features/image-composer';
+import { HomePage } from '@/views/home';
 
 export default function Home() {
-  return <ImageComposer />;
+  return <HomePage />;
 }
