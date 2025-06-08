@@ -1,5 +1,6 @@
 'use client';
 
+import { memo } from 'react';
 import { tv } from 'tailwind-variants';
 
 const cardStyles = tv({
@@ -16,7 +17,11 @@ interface CardProps {
   className?: string;
 }
 
-export function Card({ title, children, className }: CardProps) {
+export const Card = memo(function Card({
+  title,
+  children,
+  className,
+}: CardProps) {
   const styles = cardStyles();
 
   return (
@@ -25,4 +30,4 @@ export function Card({ title, children, className }: CardProps) {
       {children}
     </section>
   );
-}
+});

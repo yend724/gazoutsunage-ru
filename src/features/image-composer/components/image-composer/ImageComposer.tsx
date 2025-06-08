@@ -1,13 +1,16 @@
 'use client';
 
-import { useState, useCallback } from 'react';
 import { tv } from 'tailwind-variants';
 import { ImageUploader } from '../image-uploader';
 import { ImagePreview } from '../image-preview';
 import { ComposerSettings } from '../composer-settings';
-import { composeImages } from '../../utils/image-composer';
-import { Button, Card } from '../../../../shared/components';
-import type { UploadedImage, ComposedImageSettings } from '../../types';
+import {
+  Button,
+  Card,
+  LoadingSpinner,
+  OptimizedImage,
+} from '../../../../shared/components';
+import { useImageComposer } from '../../hooks';
 
 const composerStyles = tv({
   slots: {
@@ -27,78 +30,22 @@ const composerStyles = tv({
 
 export function ImageComposer() {
   const styles = composerStyles();
-  const [images, setImages] = useState<UploadedImage[]>([]);
-  const [settings, setSettings] = useState<ComposedImageSettings>({
-    layout: 'horizontal',
-    gap: 0,
-    backgroundColor: '#ffffff',
-    columns: 2,
-  });
-  const [composedImageUrl, setComposedImageUrl] = useState<string | null>(null);
-  const [isComposing, setIsComposing] = useState(false);
-
-  const handleImagesUploaded = useCallback((newImages: UploadedImage[]) => {
-    setImages(prev => [...prev, ...newImages]);
-    setComposedImageUrl(null);
-  }, []);
-
-  const handleRemoveImage = useCallback((id: string) => {
-    setImages(prev => prev.filter(img => img.id !== id));
-    setComposedImageUrl(null);
-  }, []);
-
-  const handleReorderImages = useCallback(
-    (dragIndex: number, dropIndex: number) => {
-      setImages(prev => {
-        const newImages = [...prev];
-        const draggedImage = newImages[dragIndex];
-        newImages.splice(dragIndex, 1);
-        newImages.splice(dropIndex, 0, draggedImage);
-
-        return newImages.map((img, index) => ({
-          ...img,
-          order: index,
-        }));
-      });
-      setComposedImageUrl(null);
-    },
-    []
-  );
-
-  const handleCompose = async () => {
-    if (images.length === 0) return;
-
-    setIsComposing(true);
-    try {
-      const blob = await composeImages(images, settings);
-      const url = URL.createObjectURL(blob);
-      setComposedImageUrl(url);
-    } catch (error) {
-      console.error('画像の合成に失敗しました:', error);
-      alert('画像の合成に失敗しました');
-    } finally {
-      setIsComposing(false);
-    }
-  };
-
-  const handleDownload = () => {
-    if (!composedImageUrl) return;
-
-    const link = document.createElement('a');
-    link.href = composedImageUrl;
-    link.download = `composed-image-${Date.now()}.png`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
-  const handleReset = () => {
-    setImages([]);
-    if (composedImageUrl) {
-      URL.revokeObjectURL(composedImageUrl);
-      setComposedImageUrl(null);
-    }
-  };
+  const {
+    images,
+    settings,
+    composedImageUrl,
+    isComposing,
+    error,
+    canCompose,
+    canReset,
+    handleImagesUploaded,
+    handleRemoveImage,
+    handleReorderImages,
+    handleCompose,
+    handleDownload,
+    handleReset,
+    setSettings,
+  } = useImageComposer();
 
   return (
     <div className={styles.container()}>
@@ -126,18 +73,31 @@ export function ImageComposer() {
                 onRemove={handleRemoveImage}
                 onReorder={handleReorderImages}
               />
+              {error && (
+                <div className="mt-4 rounded-lg bg-red-50 p-4 text-red-800">
+                  <p className="text-sm">{error}</p>
+                </div>
+              )}
               <div className={styles.buttonContainer()}>
                 <Button
                   variant="primary"
                   onClick={handleCompose}
-                  disabled={images.length === 0 || isComposing}
+                  disabled={!canCompose}
+                  aria-busy={isComposing}
                 >
-                  {isComposing ? '合成中...' : '画像を合成'}
+                  {isComposing ? (
+                    <>
+                      <LoadingSpinner size="sm" className="mr-2 inline" />
+                      合成中...
+                    </>
+                  ) : (
+                    '画像を合成'
+                  )}
                 </Button>
                 <Button
                   variant="secondary"
                   onClick={handleReset}
-                  disabled={images.length === 0 && !composedImageUrl}
+                  disabled={!canReset}
                 >
                   リセット
                 </Button>
@@ -148,7 +108,7 @@ export function ImageComposer() {
           {composedImageUrl && (
             <Card title="合成結果">
               <div className={styles.previewContainer()}>
-                <img
+                <OptimizedImage
                   src={composedImageUrl}
                   alt="合成された画像"
                   className={styles.previewImage()}

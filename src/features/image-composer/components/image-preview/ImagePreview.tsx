@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, memo, useCallback } from 'react';
 import { tv } from 'tailwind-variants';
+import { OptimizedImage } from '../../../../shared/components';
 import type { UploadedImage } from '../../types';
 
 const imagePreviewStyles = tv({
@@ -16,7 +17,7 @@ const imagePreviewStyles = tv({
       'absolute -top-2 -right-2 bg-gradient-to-r from-red-400 to-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 cursor-pointer hover:from-red-500 hover:to-red-600 z-20 shadow-lg',
     info: 'text-sm text-gray-600 mt-2 text-center font-medium',
     orderIndicator:
-      'absolute -top-2 -left-2 bg-gradient-to-r from-slate-500 to-slate-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold shadow-lg',
+      'absolute -top-2 -left-2 bg-gradient-to-r from-slate-500 to-slate-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold shadow-lg z-20',
   },
 });
 
@@ -26,7 +27,68 @@ interface ImagePreviewProps {
   onReorder: (dragIndex: number, dropIndex: number) => void;
 }
 
-export function ImagePreview({
+const ImagePreviewItem = memo(function ImagePreviewItem({
+  image,
+  index,
+  isDragging,
+  isDragOver,
+  onDragStart,
+  onDragOver,
+  onDragLeave,
+  onDrop,
+  onDragEnd,
+  onRemove,
+  styles,
+}: {
+  image: UploadedImage;
+  index: number;
+  isDragging: boolean;
+  isDragOver: boolean;
+  onDragStart: (e: React.DragEvent, index: number) => void;
+  onDragOver: (e: React.DragEvent, index: number) => void;
+  onDragLeave: () => void;
+  onDrop: (e: React.DragEvent, index: number) => void;
+  onDragEnd: () => void;
+  onRemove: (id: string) => void;
+  styles: ReturnType<typeof imagePreviewStyles>;
+}) {
+  return (
+    <div
+      className={`${styles.item()} ${isDragging ? styles.dragging() : ''} ${
+        isDragOver ? styles.dragOver() : ''
+      }`}
+      draggable
+      onDragStart={e => onDragStart(e, index)}
+      onDragOver={e => onDragOver(e, index)}
+      onDragLeave={onDragLeave}
+      onDrop={e => onDrop(e, index)}
+      onDragEnd={onDragEnd}
+    >
+      <div className="relative">
+        <div className={styles.orderIndicator()}>{index + 1}</div>
+        <OptimizedImage
+          src={image.url}
+          alt={`アップロード画像 ${index + 1}`}
+          className={styles.image()}
+          loading="lazy"
+        />
+        <button
+          type="button"
+          className={styles.removeButton()}
+          onClick={() => onRemove(image.id)}
+          aria-label="画像を削除"
+        >
+          ×
+        </button>
+      </div>
+      <p className={styles.info()}>
+        {image.width} × {image.height}
+      </p>
+    </div>
+  );
+});
+
+export const ImagePreview = memo(function ImagePreview({
   images,
   onRemove,
   onReorder,
@@ -35,74 +97,59 @@ export function ImagePreview({
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
 
-  if (images.length === 0) return null;
-
-  const handleDragStart = (e: React.DragEvent, index: number) => {
+  const handleDragStart = useCallback((e: React.DragEvent, index: number) => {
     setDraggedIndex(index);
     e.dataTransfer.effectAllowed = 'move';
     e.dataTransfer.setData('text/html', e.currentTarget.outerHTML);
-  };
+  }, []);
 
-  const handleDragOver = (e: React.DragEvent, index: number) => {
+  const handleDragOver = useCallback((e: React.DragEvent, index: number) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
     setDragOverIndex(index);
-  };
+  }, []);
 
-  const handleDragLeave = () => {
+  const handleDragLeave = useCallback(() => {
     setDragOverIndex(null);
-  };
+  }, []);
 
-  const handleDrop = (e: React.DragEvent, dropIndex: number) => {
-    e.preventDefault();
-    if (draggedIndex !== null && draggedIndex !== dropIndex) {
-      onReorder(draggedIndex, dropIndex);
-    }
+  const handleDrop = useCallback(
+    (e: React.DragEvent, dropIndex: number) => {
+      e.preventDefault();
+      if (draggedIndex !== null && draggedIndex !== dropIndex) {
+        onReorder(draggedIndex, dropIndex);
+      }
+      setDraggedIndex(null);
+      setDragOverIndex(null);
+    },
+    [draggedIndex, onReorder]
+  );
+
+  const handleDragEnd = useCallback(() => {
     setDraggedIndex(null);
     setDragOverIndex(null);
-  };
+  }, []);
 
-  const handleDragEnd = () => {
-    setDraggedIndex(null);
-    setDragOverIndex(null);
-  };
+  if (images.length === 0) return null;
 
   return (
     <div className={styles.container()}>
       {images.map((image, index) => (
-        <div
+        <ImagePreviewItem
           key={image.id}
-          className={`${styles.item()} ${
-            draggedIndex === index ? styles.dragging() : ''
-          } ${dragOverIndex === index ? styles.dragOver() : ''}`}
-          draggable
-          onDragStart={e => handleDragStart(e, index)}
-          onDragOver={e => handleDragOver(e, index)}
+          image={image}
+          index={index}
+          isDragging={draggedIndex === index}
+          isDragOver={dragOverIndex === index}
+          onDragStart={handleDragStart}
+          onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
-          onDrop={e => handleDrop(e, index)}
+          onDrop={handleDrop}
           onDragEnd={handleDragEnd}
-        >
-          <div className="relative">
-            <div className={styles.orderIndicator()}>{index + 1}</div>
-            <img
-              src={image.url}
-              alt={`アップロード画像 ${index + 1}`}
-              className={styles.image()}
-            />
-            <button
-              type="button"
-              className={styles.removeButton()}
-              onClick={() => onRemove(image.id)}
-              aria-label="画像を削除"
-            >
-              ×
-            </button>
-          </div>
-          <p className={styles.info()}>
-            {image.width} × {image.height}
-          </p>
-        </div>
+          onRemove={onRemove}
+          styles={styles}
+        />
       ))}
     </div>
   );
-}
+});

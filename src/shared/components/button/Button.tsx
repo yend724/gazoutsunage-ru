@@ -1,5 +1,6 @@
 'use client';
 
+import { memo } from 'react';
 import { tv } from 'tailwind-variants';
 
 const buttonStyles = tv({
@@ -22,7 +23,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
 }
 
-export function Button({
+export const Button = memo(function Button({
   variant,
   children,
   className,
@@ -33,4 +34,4 @@ export function Button({
       {children}
     </button>
   );
-}
+});
