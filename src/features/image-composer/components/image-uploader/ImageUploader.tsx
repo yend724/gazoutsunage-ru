@@ -3,17 +3,16 @@
 import { useCallback, useState, useRef } from 'react';
 import { tv } from 'tailwind-variants';
 import type { UploadedImage } from '../../types';
+import { Button } from '@/shared/components/button';
 
 const imageUploaderStyles = tv({
   slots: {
     container: 'w-full',
     dropzone:
-      'border-3 border-dashed border-gray-300 rounded-2xl p-12 text-center cursor-pointer transition-all duration-300 hover:border-slate-400 hover:bg-slate-50/50 backdrop-blur-sm',
+      'border-2 border-dashed border-gray-300 rounded-2xl p-12 text-center cursor-pointer transition-all duration-300 hover:border-slate-400 hover:bg-slate-50/50 backdrop-blur-sm',
     dropzoneActive: 'border-slate-400 bg-slate-100/70 transform scale-[1.02]',
     input: 'hidden',
-    text: 'text-gray-700 text-lg font-medium',
-    button:
-      'mt-6 px-8 py-3 bg-gradient-to-r from-slate-600 to-slate-700 text-white rounded-xl hover:from-slate-700 hover:to-slate-800 transition-all duration-300 shadow-lg shadow-slate-500/25 font-semibold cursor-pointer',
+    text: 'text-gray-700',
   },
 });
 
@@ -21,7 +20,9 @@ interface ImageUploaderProps {
   onImagesUploaded: (images: UploadedImage[]) => void;
 }
 
-export function ImageUploader({ onImagesUploaded }: ImageUploaderProps) {
+export const ImageUploader: React.FC<ImageUploaderProps> = ({
+  onImagesUploaded,
+}) => {
   const styles = imageUploaderStyles();
   const [isDragOver, setIsDragOver] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -117,32 +118,22 @@ export function ImageUploader({ onImagesUploaded }: ImageUploaderProps) {
         onDragLeave={handleDragLeave}
         onClick={handleClick}
         onKeyDown={handleKeyDown}
-        role="button"
         tabIndex={0}
-        aria-label="画像アップロードエリア"
-        aria-describedby="upload-description"
-        aria-busy={isProcessing}
       >
         <p className={styles.text()} id="upload-description">
           {isProcessing
             ? '画像を処理中...'
             : '画像をドラッグ＆ドロップするか、クリックして選択してください'}
         </p>
-        <p className="text-sm text-gray-500 mt-2">
-          複数の画像を選択できます（JPG、PNG、GIFなど）
-        </p>
-        <button
-          type="button"
-          className={styles.button()}
+        <Button
           onClick={e => {
             e.stopPropagation();
             handleClick();
           }}
           disabled={isProcessing}
-          aria-label="ファイル選択ダイアログを開く"
         >
           {isProcessing ? '処理中...' : '画像を選択'}
-        </button>
+        </Button>
       </div>
       <input
         ref={fileInputRef}
@@ -155,4 +146,4 @@ export function ImageUploader({ onImagesUploaded }: ImageUploaderProps) {
       />
     </div>
   );
-}
+};

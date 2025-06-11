@@ -23,15 +23,17 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
 }
 
-export const Button = memo(function Button({
+const ButtonComponent: React.FC<ButtonProps> = ({
   variant,
   children,
   className,
   ...props
-}: ButtonProps) {
+}) => {
   return (
     <button className={buttonStyles({ variant, className })} {...props}>
       {children}
     </button>
   );
-});
+};
+
+export const Button = memo(ButtonComponent);

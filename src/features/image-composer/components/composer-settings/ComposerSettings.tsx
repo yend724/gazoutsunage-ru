@@ -6,8 +6,8 @@ import type { ComposedImageSettings } from '../../types';
 
 const settingsStyles = tv({
   slots: {
-    container: 'space-y-6',
-    group: 'space-y-3',
+    container: 'grid gap-4',
+    group: 'grid gap-2',
     label: 'block text-sm font-bold text-gray-800',
     input:
       'w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-transparent transition-all duration-300 bg-white/90 backdrop-blur-sm',
@@ -21,10 +21,10 @@ interface ComposerSettingsProps {
   onChange: (settings: ComposedImageSettings) => void;
 }
 
-export function ComposerSettings({
+export const ComposerSettings: React.FC<ComposerSettingsProps> = ({
   settings,
   onChange,
-}: ComposerSettingsProps) {
+}) => {
   const id = useId();
   const styles = settingsStyles();
 
@@ -37,8 +37,6 @@ export function ComposerSettings({
 
   return (
     <div className={styles.container()}>
-      <h3 className="text-lg font-semibold mb-6">合成設定</h3>
-
       <div className={styles.group()}>
         <label htmlFor={`${id}-layout`} className={styles.label()}>
           レイアウト
@@ -59,7 +57,6 @@ export function ComposerSettings({
           <option value="grid">グリッド</option>
         </select>
       </div>
-
       {settings.layout === 'grid' && (
         <div className={styles.group()}>
           <label htmlFor={`${id}-columns`} className={styles.label()}>
@@ -76,7 +73,6 @@ export function ComposerSettings({
           />
         </div>
       )}
-
       {(settings.layout === 'horizontal' || settings.layout === 'vertical') && (
         <div className={styles.group()}>
           <label htmlFor={`${id}-size-mode`} className={styles.label()}>
@@ -103,7 +99,6 @@ export function ComposerSettings({
           </select>
         </div>
       )}
-
       <div className={styles.group()}>
         <label htmlFor={`${id}-gap`} className={styles.label()}>
           画像間の余白 (px)
@@ -120,4 +115,4 @@ export function ComposerSettings({
       </div>
     </div>
   );
-}
+};

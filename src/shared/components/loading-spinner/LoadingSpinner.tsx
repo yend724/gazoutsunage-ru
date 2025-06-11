@@ -9,10 +9,10 @@ const sizeClasses = {
   lg: 'h-12 w-12 border-4',
 };
 
-export function LoadingSpinner({
+export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   size = 'md',
   className = '',
-}: LoadingSpinnerProps) {
+}) => {
   return (
     <div
       className={`animate-spin rounded-full border-gray-300 border-t-blue-600 ${sizeClasses[size]} ${className}`}
@@ -22,4 +22,4 @@ export function LoadingSpinner({
       <span className="sr-only">読み込み中...</span>
     </div>
   );
-}
+};

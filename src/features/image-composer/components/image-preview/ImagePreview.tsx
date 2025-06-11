@@ -27,19 +27,7 @@ interface ImagePreviewProps {
   onReorder: (dragIndex: number, dropIndex: number) => void;
 }
 
-const ImagePreviewItem = memo(function ImagePreviewItem({
-  image,
-  index,
-  isDragging,
-  isDragOver,
-  onDragStart,
-  onDragOver,
-  onDragLeave,
-  onDrop,
-  onDragEnd,
-  onRemove,
-  styles,
-}: {
+interface ImagePreviewItemProps {
   image: UploadedImage;
   index: number;
   isDragging: boolean;
@@ -51,7 +39,21 @@ const ImagePreviewItem = memo(function ImagePreviewItem({
   onDragEnd: () => void;
   onRemove: (id: string) => void;
   styles: ReturnType<typeof imagePreviewStyles>;
-}) {
+}
+
+const ImagePreviewItemComponent: React.FC<ImagePreviewItemProps> = ({
+  image,
+  index,
+  isDragging,
+  isDragOver,
+  onDragStart,
+  onDragOver,
+  onDragLeave,
+  onDrop,
+  onDragEnd,
+  onRemove,
+  styles,
+}) => {
   return (
     <div
       className={`${styles.item()} ${isDragging ? styles.dragging() : ''} ${
@@ -86,13 +88,15 @@ const ImagePreviewItem = memo(function ImagePreviewItem({
       </p>
     </div>
   );
-});
+};
 
-export const ImagePreview = memo(function ImagePreview({
+const ImagePreviewItem = memo(ImagePreviewItemComponent);
+
+const ImagePreviewComponent: React.FC<ImagePreviewProps> = ({
   images,
   onRemove,
   onReorder,
-}: ImagePreviewProps) {
+}) => {
   const styles = imagePreviewStyles();
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
@@ -152,4 +156,6 @@ export const ImagePreview = memo(function ImagePreview({
       ))}
     </div>
   );
-});
+};
+
+export const ImagePreview = memo(ImagePreviewComponent);

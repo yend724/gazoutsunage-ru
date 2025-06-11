@@ -14,7 +14,7 @@ interface OptimizedImageProps {
   onError?: () => void;
 }
 
-export const OptimizedImage = memo(function OptimizedImage({
+const OptimizedImageComponent: React.FC<OptimizedImageProps> = ({
   src,
   alt,
   width,
@@ -23,7 +23,7 @@ export const OptimizedImage = memo(function OptimizedImage({
   loading = 'lazy',
   onLoad,
   onError,
-}: OptimizedImageProps) {
+}) => {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
 
@@ -74,4 +74,6 @@ export const OptimizedImage = memo(function OptimizedImage({
       />
     </div>
   );
-});
+};
+
+export const OptimizedImage = memo(OptimizedImageComponent);

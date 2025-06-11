@@ -3,7 +3,7 @@ import { ImageComposer } from '@/features/image-composer';
 import { ErrorBoundary } from '@/features/image-composer/components/error-boundary';
 import { LoadingSpinner } from '@/shared/components';
 
-function ImageComposerLoading() {
+const ImageComposerLoading: React.FC = () => {
   return (
     <div className="flex min-h-screen items-center justify-center">
       <div className="text-center">
@@ -12,9 +12,9 @@ function ImageComposerLoading() {
       </div>
     </div>
   );
-}
+};
 
-export default function HomePage() {
+export const Main: React.FC = () => {
   return (
     <ErrorBoundary>
       <Suspense fallback={<ImageComposerLoading />}>
@@ -22,4 +22,4 @@ export default function HomePage() {
       </Suspense>
     </ErrorBoundary>
   );
-}
+};
