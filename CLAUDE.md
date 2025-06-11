@@ -5,6 +5,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 このファイルは、このリポジトリでコードを扱う際のClaude Code (claude.ai/code) へのガイダンスを提供します。
 必ず日本語で回答してください。
 
+## 最重要ルール - 新しいルールの追加プロセス
+
+ユーザーから今回限りではなく常に対応が必要だと思われる指示を受けた場合：
+
+1. 「これを標準のルールにしますか？」と質問する
+2. YESの回答を得た場合、CLAUDE.mdに追加ルールとして記載する
+3. 以降は標準ルールとして常に適用する
+
+このプロセスにより、プロジェクトのルールを継続的に改善していきます。
+
 ## プロジェクト概要
 
 ガゾウツナゲール - 複数の画像を1つにつなげる無料オンラインツール
@@ -20,6 +30,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **アーキテクチャ**: Package by Features
 - **React**: v19
 - **開発ツール**: ESLint, Prettier, MarkupLint
+- **テスト**: Vitest
 
 ## コマンド
 
@@ -44,6 +55,15 @@ npm run format:check
 
 # MarkupLintによるJSXのマークアップチェック
 npm run markuplint
+
+# テスト実行 (監視モード)
+npm run test
+
+# テスト実行 (UI付き)
+npm run test:ui
+
+# テスト実行 (1回のみ)
+npm run test:run
 ```
 
 ## アーキテクチャと主要な実装
@@ -56,22 +76,22 @@ src/
 │   └── page.tsx           # ImageComposerを表示
 ├── assets/                 # 静的アセット
 │   ├── images/            # 画像ファイル
-│   └── styles/            
+│   └── styles/
 │       └── globals.css    # Tailwind CSS 4のインポート
-├── features/              
-│   └── image-composer/    
-│       ├── components/    
+├── features/
+│   └── image-composer/
+│       ├── components/
 │       │   ├── ImageComposer.tsx      # メイン統合コンポーネント
 │       │   ├── ImageUploader.tsx      # ドラッグ&ドロップ対応アップローダー
 │       │   ├── ImagePreview.tsx       # グリッド表示とサムネイル
 │       │   └── ComposerSettings.tsx   # 合成設定UI
-│       ├── types/         
+│       ├── types/
 │       │   └── index.ts               # UploadedImage, ComposedImageSettings型定義
-│       ├── utils/         
+│       ├── utils/
 │       │   └── imageComposer.ts       # Canvas APIによる画像合成ロジック
 │       └── index.ts                   # 公開APIのエクスポート
 └── shared/                # 共有コンポーネント
-    └── components/        
+    └── components/
         ├── button/        # 汎用ボタンコンポーネント
         └── card/          # 汎用カードコンポーネント
 ```
@@ -90,7 +110,7 @@ src/
 
 3. **レイアウトアルゴリズム**
    - **横並び**: 高さを最大値または最小値に合わせ、各画像を適切にスケーリング
-   - **縦並び**: 幅を最大値または最小値に合わせ、各画像を適切にスケーリング  
+   - **縦並び**: 幅を最大値または最小値に合わせ、各画像を適切にスケーリング
    - **グリッド**: 指定列数で動的なセルサイズ、アスペクト比保持
 
 ### スタイリング戦略
@@ -127,9 +147,17 @@ const styles = tv({
 - JSXのマークアップ品質チェック
 - React仕様を使用
 
+## テスト戦略
+
+- **テストフレームワーク**: Vitest
+- **テスト対象**: 純粋関数のみ（UIテストは除外）
+- **主要なテスト対象**:
+  - `calculateCanvasSize()`: レイアウトごとのキャンバスサイズ計算
+  - `calculateImagePositions()`: 画像配置位置の計算
+- **テストファイル**: `*.test.ts` または `*.spec.ts`
+
 ## 注意事項
 
 - Tailwind CSS 4を使用（設定ファイルなし、PostCSS経由）
 - すべての処理はクライアントサイドで完結
-- テストは未実装
 - 開発前にフォーマットとリントの実行を推奨
