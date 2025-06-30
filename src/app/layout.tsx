@@ -75,29 +75,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              '@context': 'https://schema.org',
-              '@type': 'WebApplication',
-              name: 'ガゾウツナゲール',
-              description: '複数の画像を1つにつなげる無料オンラインツール',
-              applicationCategory: 'UtilitiesApplication',
-              operatingSystem: 'Any',
-              offers: {
-                '@type': 'Offer',
-                price: '0',
-                priceCurrency: 'JPY',
-              },
-              featureList: [
-                '複数画像の結合',
-                'ドラッグ&ドロップ対応',
-                '横並び・縦並び・グリッド配置',
-                'ブラウザ内処理',
-              ],
-            }),
-          }}
+        <meta
+          httpEquiv="Content-Security-Policy"
+          content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self';"
         />
       </head>
       <body className="font-sans antialiased">{children}</body>

@@ -2,7 +2,7 @@
 
 import { useCallback, useState, useRef } from 'react';
 import { tv } from 'tailwind-variants';
-import type { UploadedImage } from '../../types';
+import { useImageContext } from '@/entities/image';
 import { Button } from '@/shared/components/button';
 
 const imageUploaderStyles = tv({
@@ -17,15 +17,12 @@ const imageUploaderStyles = tv({
 });
 
 interface ImageUploaderProps {
-  onImagesUploaded: (images: UploadedImage[]) => void;
   onError?: (error: string) => void;
 }
 
-export const ImageUploader: React.FC<ImageUploaderProps> = ({
-  onImagesUploaded,
-  onError,
-}) => {
+export const ImageUploader: React.FC<ImageUploaderProps> = ({ onError }) => {
   const styles = imageUploaderStyles();
+  const { addImage } = useImageContext();
   const [isDragOver, setIsDragOver] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -35,7 +32,6 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
       if (!files || files.length === 0) return;
 
       setIsProcessing(true);
-      const newImages: UploadedImage[] = [];
       const maxFileSize = 10 * 1024 * 1024; // 10MB
       const validImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
 
@@ -43,7 +39,6 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
         for (let i = 0; i < files.length; i++) {
           const file = files[i];
           
-          // ファイルタイプチェック
           if (!file.type.startsWith('image/') || !validImageTypes.includes(file.type)) {
             if (onError) {
               onError(`${file.name} は対応していない画像形式です。JPEG、PNG、GIF、WebP形式の画像を使用してください。`);
@@ -51,7 +46,6 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
             continue;
           }
 
-          // ファイルサイズチェック
           if (file.size > maxFileSize) {
             if (onError) {
               onError(`${file.name} のサイズが大きすぎます。10MB以下の画像を使用してください。`);
@@ -68,7 +62,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
             img.src = url;
           });
 
-          newImages.push({
+          addImage({
             id: `${Date.now()}-${i}`,
             file,
             url,
@@ -76,14 +70,6 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
             height: img.height,
             order: i,
           });
-        }
-
-        if (newImages.length === 0 && files.length > 0) {
-          if (onError) {
-            onError('有効な画像ファイルが選択されませんでした。');
-          }
-        } else {
-          onImagesUploaded(newImages);
         }
       } catch (error) {
         console.error('画像の読み込みに失敗しました:', error);
@@ -94,7 +80,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
         setIsProcessing(false);
       }
     },
-    [onImagesUploaded, onError]
+    [addImage, onError]
   );
 
   const handleDrop = useCallback(

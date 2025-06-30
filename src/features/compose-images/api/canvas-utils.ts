@@ -1,43 +1,9 @@
-import type {
-  UploadedImage,
-  ComposedImageSettings,
-  ImageDimensions,
-} from '../../types';
-import { composeImagesWithWorker, composeImagesMainThread } from '../image-worker-composer';
-
-export async function composeImages(
-  images: UploadedImage[],
-  settings: ComposedImageSettings
-): Promise<Blob> {
-  if (images.length === 0) {
-    throw new Error('画像が選択されていません');
-  }
-
-  // Web Workerが利用可能で、OffscreenCanvasがサポートされている場合はWorkerを使用
-  const useWorker = typeof Worker !== 'undefined' && 
-                   typeof OffscreenCanvas !== 'undefined' &&
-                   images.length > 1; // 複数枚の場合のみWorkerを使用
-
-  try {
-    if (useWorker) {
-      console.log('Web Workerを使用して画像を合成します');
-      return await composeImagesWithWorker(images, settings);
-    } else {
-      console.log('メインスレッドで画像を合成します');
-      return await composeImagesMainThread(images, settings);
-    }
-  } catch (error) {
-    // Workerが失敗した場合はフォールバックとしてメインスレッドを使用
-    if (useWorker) {
-      console.warn('Web Workerでの処理に失敗しました。メインスレッドにフォールバックします:', error);
-      return await composeImagesMainThread(images, settings);
-    }
-    throw error;
-  }
-}
+import type { ImageEntity } from '@/entities/image';
+import type { ComposedImageSettings } from '../model/types';
+import type { ImageDimensions } from '@/entities/image';
 
 export function calculateCanvasSize(
-  images: UploadedImage[],
+  images: ImageEntity[],
   settings: ComposedImageSettings
 ): ImageDimensions {
   let width = 0;
@@ -45,10 +11,8 @@ export function calculateCanvasSize(
 
   switch (settings.layout) {
     case 'horizontal':
-      // 横並び: 幅は合計、高さは最大値または最小値
       if (settings.sizeMode === 'minimum') {
         height = Math.min(...images.map(img => img.height));
-        // 各画像の幅を最小高さに合わせて調整
         width =
           images.reduce((sum, img) => {
             const scale = height / img.height;
@@ -57,7 +21,6 @@ export function calculateCanvasSize(
           (images.length - 1) * settings.gap;
       } else {
         height = Math.max(...images.map(img => img.height));
-        // 各画像の幅を最大高さに合わせて調整
         width =
           images.reduce((sum, img) => {
             const scale = height / img.height;
@@ -68,10 +31,8 @@ export function calculateCanvasSize(
       break;
 
     case 'vertical':
-      // 縦並び: 幅は最大値または最小値、高さは合計
       if (settings.sizeMode === 'minimum') {
         width = Math.min(...images.map(img => img.width));
-        // 各画像の高さを最小幅に合わせて調整
         height =
           images.reduce((sum, img) => {
             const scale = width / img.width;
@@ -80,7 +41,6 @@ export function calculateCanvasSize(
           (images.length - 1) * settings.gap;
       } else {
         width = Math.max(...images.map(img => img.width));
-        // 各画像の高さを最大幅に合わせて調整
         height =
           images.reduce((sum, img) => {
             const scale = width / img.width;
@@ -94,7 +54,6 @@ export function calculateCanvasSize(
       const columns = settings.columns || 2;
       const rows = Math.ceil(images.length / columns);
 
-      // 各列の最大幅を計算
       const columnWidths: number[] = [];
       for (let col = 0; col < columns; col++) {
         let maxWidth = 0;
@@ -107,7 +66,6 @@ export function calculateCanvasSize(
         columnWidths.push(maxWidth);
       }
 
-      // 各行の最大高さを計算
       const rowHeights: number[] = [];
       for (let row = 0; row < rows; row++) {
         let maxHeight = 0;
@@ -131,7 +89,7 @@ export function calculateCanvasSize(
   return { width, height };
 }
 
-interface ImagePosition {
+export interface ImagePosition {
   x: number;
   y: number;
   width: number;
@@ -139,7 +97,7 @@ interface ImagePosition {
 }
 
 export function calculateImagePositions(
-  images: UploadedImage[],
+  images: ImageEntity[],
   settings: ComposedImageSettings,
   canvasSize: ImageDimensions
 ): ImagePosition[] {
@@ -152,11 +110,9 @@ export function calculateImagePositions(
       for (const image of images) {
         let scale: number;
         if (settings.sizeMode === 'minimum') {
-          // 最小高さに合わせるモード：すべての画像を最小高さに縮小
           const minHeight = Math.min(...images.map(img => img.height));
           scale = minHeight / image.height;
         } else {
-          // デフォルトモード：最大高さに合わせる
           const maxHeight = Math.max(...images.map(img => img.height));
           scale = maxHeight / image.height;
         }
@@ -176,11 +132,9 @@ export function calculateImagePositions(
       for (const image of images) {
         let scale: number;
         if (settings.sizeMode === 'minimum') {
-          // 最小幅に合わせるモード：すべての画像を最小幅に縮小
           const minWidth = Math.min(...images.map(img => img.width));
           scale = minWidth / image.width;
         } else {
-          // デフォルトモード：最大幅に合わせる
           const maxWidth = Math.max(...images.map(img => img.width));
           scale = maxWidth / image.width;
         }
@@ -198,7 +152,6 @@ export function calculateImagePositions(
       const columns = settings.columns || 2;
       const rows = Math.ceil(images.length / columns);
 
-      // セルサイズを計算
       const cellWidth =
         (canvasSize.width - (columns - 1) * settings.gap) / columns;
       const cellHeight = (canvasSize.height - (rows - 1) * settings.gap) / rows;
@@ -208,7 +161,6 @@ export function calculateImagePositions(
         const row = Math.floor(i / columns);
         const image = images[i];
 
-        // アスペクト比を保持してセル内に収める
         const scale = Math.min(
           cellWidth / image.width,
           cellHeight / image.height
@@ -216,7 +168,6 @@ export function calculateImagePositions(
         const width = image.width * scale;
         const height = image.height * scale;
 
-        // セル内で中央揃え
         const x = col * (cellWidth + settings.gap) + (cellWidth - width) / 2;
         const y = row * (cellHeight + settings.gap) + (cellHeight - height) / 2;
 

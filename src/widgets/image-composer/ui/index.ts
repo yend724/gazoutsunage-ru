@@ -1,0 +1,1 @@
+export { ImageComposerWidget } from './ImageComposerWidget';

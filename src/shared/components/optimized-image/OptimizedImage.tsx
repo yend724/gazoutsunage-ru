@@ -1,6 +1,7 @@
 'use client';
 
 import { memo, useState } from 'react';
+import Image from 'next/image';
 import { LoadingSpinner } from '../loading-spinner';
 
 interface OptimizedImageProps {
@@ -61,16 +62,16 @@ const OptimizedImageComponent: React.FC<OptimizedImageProps> = ({
           <LoadingSpinner size="sm" />
         </div>
       )}
-      <img
+      <Image
         src={src}
         alt={alt}
-        width={width}
-        height={height}
+        width={width || 0}
+        height={height || 0}
         className={`${className} ${isLoading ? 'invisible' : 'visible'}`}
         loading={loading}
-        decoding="async"
         onLoad={handleLoad}
         onError={handleError}
+        unoptimized
       />
     </div>
   );

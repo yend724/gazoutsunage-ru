@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import type { UploadedImage, ComposedImageSettings } from '../types';
 import { composeImages } from '../utils/image-composer';
 
@@ -21,7 +21,13 @@ export function useImageComposer() {
   }, []);
 
   const handleRemoveImage = useCallback((id: string) => {
-    setImages(prev => prev.filter(img => img.id !== id));
+    setImages(prev => {
+      const imageToRemove = prev.find(img => img.id === id);
+      if (imageToRemove && imageToRemove.url) {
+        URL.revokeObjectURL(imageToRemove.url);
+      }
+      return prev.filter(img => img.id !== id);
+    });
     setComposedImageUrl(null);
   }, []);
 
@@ -78,13 +84,42 @@ export function useImageComposer() {
   }, [composedImageUrl]);
 
   const handleReset = useCallback(() => {
+    // 既存の画像URLをすべてクリーンアップ
+    images.forEach(image => {
+      if (image.url) {
+        URL.revokeObjectURL(image.url);
+      }
+    });
     setImages([]);
+    
     if (composedImageUrl) {
       URL.revokeObjectURL(composedImageUrl);
       setComposedImageUrl(null);
     }
     setError(null);
-  }, [composedImageUrl]);
+  }, [composedImageUrl, images]);
+
+  const clearError = useCallback(() => {
+    setError(null);
+  }, []);
+
+  const handleError = useCallback((errorMessage: string) => {
+    setError(errorMessage);
+  }, []);
+
+  // コンポーネントのアンマウント時にURLをクリーンアップ
+  useEffect(() => {
+    return () => {
+      if (composedImageUrl) {
+        URL.revokeObjectURL(composedImageUrl);
+      }
+      images.forEach(image => {
+        if (image.url) {
+          URL.revokeObjectURL(image.url);
+        }
+      });
+    };
+  }, [composedImageUrl, images]);
 
   const canCompose = useMemo(
     () => images.length > 0 && !isComposing,
@@ -110,5 +145,7 @@ export function useImageComposer() {
     handleDownload,
     handleReset,
     setSettings,
+    clearError,
+    handleError,
   };
 }
