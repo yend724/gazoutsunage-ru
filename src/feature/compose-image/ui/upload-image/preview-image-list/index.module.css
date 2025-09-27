@@ -1,0 +1,21 @@
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+  border-radius: 0.5rem;
+}
+.item {
+  position: relative;
+}
+.image {
+  width: 100%;
+  min-width: 0;
+  height: 200px;
+  object-fit: cover;
+  object-position: center;
+}
+.removeButton {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+}

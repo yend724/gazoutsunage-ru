@@ -1,0 +1,22 @@
+.dropZone {
+  position: relative;
+  border-radius: 0.5rem;
+  background-color: var(--background);
+  display: grid;
+  place-content: center;
+  cursor: pointer;
+  min-height: 10rem;
+}
+.hiddenInput {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  overflow: hidden;
+}
+.uploadContent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}

@@ -1,0 +1,20 @@
+.container {
+  display: grid;
+  gap: 1rem;
+}
+
+.canvas-container {
+  width: 100%;
+  overflow: auto;
+  position: relative;
+  border-radius: 0.5rem;
+  border-width: 1px;
+  border-color: var(--background);
+  border-style: solid;
+}
+
+.canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
