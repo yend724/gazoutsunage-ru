@@ -2,19 +2,23 @@
   display: grid;
   gap: 1rem;
 }
-
 .canvas-container {
   width: 100%;
   overflow: auto;
   position: relative;
   border-radius: 0.5rem;
-  border-width: 1px;
-  border-color: var(--background);
+  border-color: var(--border);
   border-style: solid;
+  border-width: 1px;
+  background: var(--background);
+  max-height: max(80vh, 600px);
 }
-
 .canvas {
   position: absolute;
-  top: 0;
-  left: 0;
+}
+.controls {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
 }

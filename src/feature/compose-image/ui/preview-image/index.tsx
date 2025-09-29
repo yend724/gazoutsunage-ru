@@ -47,6 +47,7 @@ type Props = {
 export const PreviewImage: React.FC<Props> = ({ images }) => {
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [zoom, setZoom] = useState(1);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -60,7 +61,6 @@ export const PreviewImage: React.FC<Props> = ({ images }) => {
         const loadedImages = await Promise.all(
           images.map(img => loadImageFromDataUrl(img.dataUrl))
         );
-        console.log('Loaded images:', loadedImages);
         const { width, height } = drawImagesToCanvas(ctx, loadedImages);
         setCanvasSize({ width, height });
       } catch (error) {
@@ -74,6 +74,10 @@ export const PreviewImage: React.FC<Props> = ({ images }) => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       setCanvasSize({ width: 0, height: 0 });
     }
+
+    return () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    };
   }, [images]);
 
   const handleDownload = useCallback(() => {
@@ -94,13 +98,32 @@ export const PreviewImage: React.FC<Props> = ({ images }) => {
     <div>
       {images.length > 0 && (
         <div className={styles.container}>
+          <div className={styles.controls}>
+            <input
+              type="range"
+              value={zoom * 100}
+              min={10}
+              max={200}
+              step={1}
+              onChange={e => setZoom(Number(e.target.value) / 100)}
+            />
+            <span>Zoom: {(zoom * 100).toFixed(0)}%</span>
+          </div>
           <div
             className={styles['canvas-container']}
             style={{
               height: canvasSize.height + 2,
             }}
           >
-            <canvas ref={canvasRef} className={styles.canvas} />
+            <canvas
+              ref={canvasRef}
+              className={styles.canvas}
+              style={{
+                inset: 0,
+                zoom: zoom,
+                margin: zoom <= 1 ? 'auto' : '0 auto',
+              }}
+            />
           </div>
           <div>
             <Button onClick={handleDownload} disabled={images.length === 0}>

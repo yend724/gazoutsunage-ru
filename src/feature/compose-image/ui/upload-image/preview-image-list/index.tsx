@@ -13,10 +13,11 @@ export const PreviewImageList: React.FC<Props> = ({
 }) => {
   return (
     <div className={styles.container}>
-      {images.map(image => (
+      {images.map((image, index) => (
         <div key={image.id} className={styles.item}>
+          <span className={styles['image-index']}>{index + 1}</span>
           <button
-            className={styles.removeButton}
+            className={styles['remove-button']}
             onClick={() => onImageRemoved(image.id)}
           >
             Remove
