@@ -9,7 +9,7 @@
   border-radius: 0.5rem;
   border-color: var(--border);
   border-style: solid;
-  border-width: 1px;
+  border-width: 2px;
   background: var(--background);
   max-height: max(80vh, 600px);
 }

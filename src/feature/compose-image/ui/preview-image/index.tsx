@@ -112,7 +112,7 @@ export const PreviewImage: React.FC<Props> = ({ images }) => {
           <div
             className={styles['canvas-container']}
             style={{
-              height: canvasSize.height + 2,
+              height: canvasSize.height + 4,
             }}
           >
             <canvas
