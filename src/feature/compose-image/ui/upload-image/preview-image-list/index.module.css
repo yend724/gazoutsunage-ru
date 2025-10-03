@@ -1,11 +1,16 @@
 .container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  display: flex;
   gap: 1rem;
-  border-radius: 0.5rem;
+  overflow-x: auto;
+  height: 200px;
 }
 .item {
   position: relative;
+  flex-shrink: 0;
+  height: 100%;
+  aspect-ratio: 16/9;
+  border-radius: 0.5rem;
+  overflow: hidden;
 }
 .image {
   width: 100%;
@@ -34,4 +39,17 @@
   padding: 0.25rem 0.5rem;
   border-radius: 0.25rem;
   font-size: 0.875rem;
+}
+.order-buttons {
+  position: absolute;
+  bottom: 0.5rem;
+  right: 0.5rem;
+  display: flex;
+  gap: 0.25rem;
+}
+.order-button {
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 1rem;
 }

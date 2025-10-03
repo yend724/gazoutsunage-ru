@@ -12,6 +12,7 @@ type Props = {
 };
 export const PreviewImage: React.FC<Props> = ({ images }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const canvasAreaRef = useRef<HTMLDivElement>(null);
   const [zoom, setZoom] = useState(1);
 
   useEffect(() => {
@@ -26,7 +27,14 @@ export const PreviewImage: React.FC<Props> = ({ images }) => {
         const loadedImages = await Promise.all(
           images.map(img => loadImageFromDataUrl(img.dataUrl))
         );
-        drawImagesToCanvas(ctx, loadedImages);
+        const { width, height } = drawImagesToCanvas(ctx, loadedImages);
+        if (canvasAreaRef.current) {
+          const canvasArea = canvasAreaRef.current;
+          canvasArea.scrollTo({
+            top: (height * zoom) / 2,
+            left: (width * zoom) / 2,
+          });
+        }
       } catch (error) {
         console.error('Failed to render images:', error);
       }
@@ -43,7 +51,7 @@ export const PreviewImage: React.FC<Props> = ({ images }) => {
       canvas.width = 0;
       canvas.height = 0;
     };
-  }, [images]);
+  }, [images, zoom]);
 
   const handleDownload = useCallback(() => {
     const canvas = canvasRef.current;
@@ -69,17 +77,17 @@ export const PreviewImage: React.FC<Props> = ({ images }) => {
           />
           <span>Zoom: {(zoomLevel * 100).toFixed(0)}%</span>
         </div>
-        <div className={styles['canvas-container']}>
-          {disabled && (
-            <p>画像を選択してプレビューを表示</p>
-          )}
-          <canvas
-            ref={canvasRef}
-            className={styles.canvas}
-            style={{
-              zoom: zoom,
-            }}
-          />
+        <div className={styles['canvas-area']} ref={canvasAreaRef}>
+          {disabled && <p>画像を選択してプレビューを表示</p>}
+          <div className={styles['canvas-container']}>
+            <canvas
+              ref={canvasRef}
+              className={styles.canvas}
+              style={{
+                zoom: zoom,
+              }}
+            />
+          </div>
         </div>
         <div>
           <Button onClick={handleDownload} disabled={disabled}>

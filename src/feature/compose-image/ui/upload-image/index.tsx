@@ -14,7 +14,7 @@ export const UploadImage: React.FC<Props> = ({ onImagesChanged }) => {
 
   const addImages = async (fileList: FileList) => {
     const newImages = await Promise.all(
-      Array.from(fileList).map(async file => {
+      Array.from(fileList).map(async (file, index) => {
         const reader = new FileReader();
         const dataUrl = await new Promise<string>((resolve, reject) => {
           reader.onload = () => {
@@ -31,6 +31,7 @@ export const UploadImage: React.FC<Props> = ({ onImagesChanged }) => {
           id: crypto.randomUUID(),
           file,
           dataUrl,
+          order: uploadedImages.length + index + 1,
         };
       })
     );
@@ -39,10 +40,51 @@ export const UploadImage: React.FC<Props> = ({ onImagesChanged }) => {
     setUploadedImages([...uploadedImages, ...newImages]);
   };
 
-  const removeImages = (id: string) => {
-    const remainingImages = uploadedImages.filter(image => image.id !== id);
+  const removeImage = (id: string) => {
+    const remainingImages = uploadedImages
+      .filter(image => image.id !== id)
+      .map((img, i) => ({
+        ...img,
+        order: i + 1,
+      }));
     onImagesChanged(remainingImages);
     setUploadedImages(remainingImages);
+  };
+
+  const moveUpImage = (id: string) => {
+    const index = uploadedImages.findIndex(img => img.id === id);
+    if (index <= 0) return;
+
+    const updatedImages = [...uploadedImages];
+    [updatedImages[index - 1], updatedImages[index]] = [
+      updatedImages[index],
+      updatedImages[index - 1],
+    ];
+
+    const reorderedImages = updatedImages.map((img, i) => ({
+      ...img,
+      order: i + 1,
+    }));
+    setUploadedImages(reorderedImages);
+    onImagesChanged(reorderedImages);
+  };
+
+  const moveDownImage = (id: string) => {
+    const index = uploadedImages.findIndex(img => img.id === id);
+    if (index < 0 || index >= uploadedImages.length - 1) return;
+
+    const updatedImages = [...uploadedImages];
+    [updatedImages[index], updatedImages[index + 1]] = [
+      updatedImages[index + 1],
+      updatedImages[index],
+    ];
+
+    const reorderedImages = updatedImages.map((img, i) => ({
+      ...img,
+      order: i + 1,
+    }));
+    setUploadedImages(reorderedImages);
+    onImagesChanged(reorderedImages);
   };
 
   return (
@@ -51,7 +93,9 @@ export const UploadImage: React.FC<Props> = ({ onImagesChanged }) => {
         <DropZone onFilesSelected={addImages} />
         <PreviewImageList
           images={uploadedImages}
-          onImageRemoved={removeImages}
+          onImageOrderMoveUp={moveUpImage}
+          onImageOrderMoveDown={moveDownImage}
+          onImageRemoved={removeImage}
         />
       </div>
     </div>
