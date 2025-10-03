@@ -121,7 +121,6 @@ export const PreviewImage: React.FC<Props> = ({ images }) => {
               style={{
                 inset: 0,
                 zoom: zoom,
-                margin: zoom <= 1 ? 'auto' : '0 auto',
               }}
             />
           </div>
