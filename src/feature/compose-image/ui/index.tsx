@@ -12,12 +12,16 @@ export const ComposeImage: React.FC = () => {
   const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]);
   return (
     <div className={styles.container}>
-      <UploadImage
-        onImagesChanged={allImages => {
-          setUploadedImages(allImages);
-        }}
-      />
-      <PreviewImage images={uploadedImages} />
+      <div>
+        <UploadImage
+          onImagesChanged={allImages => {
+            setUploadedImages(allImages);
+          }}
+        />
+      </div>
+      <div>
+        <PreviewImage images={uploadedImages} />
+      </div>
     </div>
   );
 };

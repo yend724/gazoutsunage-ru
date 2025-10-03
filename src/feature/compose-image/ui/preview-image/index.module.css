@@ -1,17 +1,19 @@
 .container {
   display: grid;
-  gap: 1rem;
+  gap: 1.5rem;
 }
 .canvas-container {
-  width: 100%;
-  overflow: auto;
   position: relative;
+  width: 100%;
+  max-height: min(80vh, 600px);
+  overflow: auto;
   border-radius: 0.5rem;
-  border-color: var(--border);
-  border-style: solid;
-  border-width: 2px;
-  background: var(--background);
-  max-height: max(80vh, 600px);
+  border: 1px solid var(--primary-background-color);
+  background-color: color-mix(
+    in srgb,
+    var(--secondary-background-color),
+    transparent 60%
+  );
 }
 .canvas {
   position: absolute;

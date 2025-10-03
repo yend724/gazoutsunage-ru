@@ -1,11 +1,17 @@
 .dropZone {
-  position: relative;
-  border-radius: 0.5rem;
-  background-color: var(--background);
   display: grid;
-  place-content: center;
-  cursor: pointer;
+  place-items: center;
+  height: 100%;
   min-height: 10rem;
+  border: 1px dashed
+    color-mix(in srgb, var(--primary-background-color), transparent 20%);
+  border-radius: 0.5rem;
+  background-color: color-mix(
+    in srgb,
+    var(--secondary-background-color),
+    transparent 60%
+  );
+  cursor: pointer;
 }
 .hiddenInput {
   position: absolute;
@@ -19,6 +25,6 @@
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  gap: 0.5rem;
+  gap: 1rem;
   padding: 1rem;
 }

@@ -1,6 +1,8 @@
+import styles from './index.module.css';
+
 export const Header = () => {
   return (
-    <header>
+    <header className={styles.header}>
       <h1>ガゾウツナゲール</h1>
       <p>
         複数の画像を横に並べて1枚の画像にします。
