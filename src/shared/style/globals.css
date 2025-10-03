@@ -52,6 +52,10 @@ input[type='range'] {
   background-color: var(--secondary-background-color);
   border-radius: 0.2rem;
 }
+input[type='range']:disabled {
+  cursor: not-allowed;
+  opacity: 0.2;
+}
 /* Track: Firefox */
 input[type='range']::-moz-range-track {
   -webkit-appearance: none;

@@ -46,9 +46,14 @@ export const UploadImage: React.FC<Props> = ({ onImagesChanged }) => {
   };
 
   return (
-    <div className={styles.container}>
-      <DropZone onFilesSelected={addImages} />
-      <PreviewImageList images={uploadedImages} onImageRemoved={removeImages} />
+    <div>
+      <div className={styles.container}>
+        <DropZone onFilesSelected={addImages} />
+        <PreviewImageList
+          images={uploadedImages}
+          onImageRemoved={removeImages}
+        />
+      </div>
     </div>
   );
 };

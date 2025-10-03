@@ -1,4 +1,4 @@
-.dropZone {
+.drop-zone {
   display: grid;
   place-items: center;
   height: 100%;
@@ -13,14 +13,14 @@
   );
   cursor: pointer;
 }
-.hiddenInput {
+.hidden-input {
   position: absolute;
   width: 0;
   height: 0;
   opacity: 0;
   overflow: hidden;
 }
-.uploadContent {
+.upload-content {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;

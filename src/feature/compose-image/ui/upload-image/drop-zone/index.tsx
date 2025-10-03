@@ -15,7 +15,7 @@ export const DropZone: React.FC<Props> = ({ onFilesSelected }) => {
 
   return (
     <div
-      className={styles.dropZone}
+      className={styles['drop-zone']}
       onDragOver={e => e.preventDefault()}
       onDrop={e => {
         e.preventDefault();
@@ -34,9 +34,9 @@ export const DropZone: React.FC<Props> = ({ onFilesSelected }) => {
           if (!files) return;
           onFilesSelected(files);
         }}
-        className={styles.hiddenInput}
+        className={styles['hidden-input']}
       />
-      <div className={styles.uploadContent}>
+      <div className={styles['upload-content']}>
         <p className={styles.uploadText}>画像をドラッグ＆ドロップまたは</p>
         <Button onClick={handleButtonClick}>ファイルを選択</Button>
       </div>

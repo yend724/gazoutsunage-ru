@@ -1,11 +1,19 @@
+.wrapper {
+  display: grid;
+  height: 100%;
+}
 .container {
   display: grid;
+  grid-template-rows: auto 1fr auto;
   gap: 1.5rem;
 }
 .canvas-container {
   position: relative;
+  display: grid;
+  place-content: center;
+  padding: 1rem;
   width: 100%;
-  max-height: min(80vh, 600px);
+  min-height: 60vh;
   overflow: auto;
   border-radius: 0.5rem;
   border: 1px solid var(--primary-background-color);
