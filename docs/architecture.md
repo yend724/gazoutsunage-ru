@@ -32,12 +32,12 @@ graph TB
         E[Tailwind CSS] --> B
         F[Radix Colors] --> E
     end
-    
+
     subgraph "Hosting"
         G[Static Files] --> A
         H[CDN] --> G
     end
-    
+
     A -.->|No Server Communication| I[Local Processing Only]
 ```
 
@@ -195,7 +195,7 @@ interface ImageItem {
 // Context Provider
 const ImageMergerProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(imageMergerReducer, initialState)
-  
+
   return (
     <ImageMergerContext.Provider value={{ state, dispatch }}>
       {children}
@@ -233,7 +233,7 @@ const processImageOffscreen = (images: ImageItem[]): Promise<string> => {
   return new Promise((resolve) => {
     const offscreenCanvas = new OffscreenCanvas(width, height)
     const ctx = offscreenCanvas.getContext('2d')
-    
+
     // バックグラウンドで画像結合処理
     setTimeout(() => {
       // 結合処理
@@ -248,16 +248,16 @@ const processImageOffscreen = (images: ImageItem[]): Promise<string> => {
 ```typescript
 const loadImagesProgressively = async (files: File[]): Promise<ImageItem[]> => {
   const results: ImageItem[] = []
-  
+
   for (const file of files) {
     // 1枚ずつ処理してUIをブロックしない
     const imageItem = await processImage(file)
     results.push(imageItem)
-    
+
     // UIを更新
     yield imageItem
   }
-  
+
   return results
 }
 ```
@@ -268,10 +268,10 @@ const loadImagesProgressively = async (files: File[]): Promise<ImageItem[]> => {
 ```typescript
 const createImagePreview = (file: File): string => {
   const url = URL.createObjectURL(file)
-  
+
   // クリーンアップ関数を登録
   cleanupCallbacks.add(() => URL.revokeObjectURL(url))
-  
+
   return url
 }
 
@@ -285,11 +285,11 @@ const cleanup = () => {
 ```typescript
 class CanvasPool {
   private pool: HTMLCanvasElement[] = []
-  
+
   getCanvas(): HTMLCanvasElement {
     return this.pool.pop() || document.createElement('canvas')
   }
-  
+
   releaseCanvas(canvas: HTMLCanvasElement): void {
     // キャンバスをクリアして再利用可能にする
     const ctx = canvas.getContext('2d')
@@ -313,12 +313,12 @@ const nextConfig = {
       }
     }
   },
-  
+
   // 本番ビルド最適化
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production'
   },
-  
+
   // 画像最適化
   images: {
     formats: ['image/webp', 'image/avif']
@@ -360,7 +360,7 @@ const checkBrowserSupport = (): BrowserSupport => {
 
 const BrowserCompatibilityCheck: React.FC = () => {
   const support = checkBrowserSupport()
-  
+
   if (!support.canvas || !support.fileAPI) {
     return (
       <div className="error-message">
@@ -369,7 +369,7 @@ const BrowserCompatibilityCheck: React.FC = () => {
       </div>
     )
   }
-  
+
   return <ImageMergerApp />
 }
 ```
@@ -379,7 +379,7 @@ const BrowserCompatibilityCheck: React.FC = () => {
 ### 6.1 Content Security Policy
 
 ```http
-Content-Security-Policy: 
+Content-Security-Policy:
   default-src 'self';
   script-src 'self';
   style-src 'self' 'unsafe-inline';
@@ -403,15 +403,15 @@ const validateFile = (file: File, validation: FileValidation): ValidationResult 
   if (!validation.allowedTypes.includes(file.type)) {
     return { valid: false, error: 'ファイル形式が対応していません' }
   }
-  
+
   // ファイルサイズチェック
   if (file.size > validation.maxSize) {
     return { valid: false, error: 'ファイルサイズが大きすぎます' }
   }
-  
+
   // ファイル名サニタイズ
   const safeName = file.name.replace(/[<>:"/\\|?*]/g, '_')
-  
+
   return { valid: true, safeName }
 }
 ```
@@ -463,10 +463,10 @@ export default [
       // セキュリティルール
       'react/no-danger': 'error',
       'react/no-danger-with-children': 'error',
-      
+
       // パフォーマンスルール
       'react-hooks/exhaustive-deps': 'error',
-      
+
       // コード品質
       '@typescript-eslint/no-unused-vars': 'error',
       '@typescript-eslint/explicit-function-return-type': 'warn'
@@ -544,28 +544,28 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
           cache: 'pnpm'
-      
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      
+
       - name: Type check
         run: pnpm type-check
-      
+
       - name: Lint
         run: pnpm lint
-      
+
       - name: Build
         run: pnpm build
-      
+
       - name: Deploy to Vercel
         uses: vercel/action@v1
         with:
@@ -585,7 +585,7 @@ const measurePerformance = () => {
     const lastEntry = entries[entries.length - 1]
     console.log('LCP:', lastEntry.startTime)
   }).observe({ entryTypes: ['largest-contentful-paint'] })
-  
+
   // First Input Delay
   new PerformanceObserver((list) => {
     const entries = list.getEntries()
@@ -613,7 +613,7 @@ window.addEventListener('error', (event) => {
 // Canvas エラーの特別処理
 const handleCanvasError = (error: Error) => {
   console.error('Canvas Error:', error.message)
-  
+
   // ユーザーにフレンドリーなメッセージを表示
   if (error.message.includes('memory')) {
     showError('画像が大きすぎます。数を減らしてください。')
@@ -644,7 +644,7 @@ const checkImageConstraints = (images: ImageItem[]): boolean => {
   const totalPixels = images.reduce((sum, img) => {
     return sum + (img.width * img.height)
   }, 0)
-  
+
   return totalPixels <= MAX_TOTAL_PIXELS
 }
 ```
@@ -743,27 +743,27 @@ describe('画像処理', () => {
   it('横並び配置で画像を結合できる', async () => {
     const mockCanvas = createMockCanvas()
     vi.spyOn(document, 'createElement').mockReturnValue(mockCanvas)
-    
+
     const images = [
       { width: 100, height: 100, data: 'data:image/png;base64,...' },
       { width: 200, height: 150, data: 'data:image/png;base64,...' }
     ]
-    
+
     const result = await combineImages(images, {
       arrangement: 'horizontal',
       margin: 10
     })
-    
+
     expect(result).toBeDefined()
     expect(mockCanvas.width).toBe(320) // 100 + 200 + 10*2
     expect(mockCanvas.height).toBe(150) // max height
   })
-  
+
   it('大きすぎる画像でエラーが発生する', async () => {
     const largeImages = [
       { width: 20000, height: 20000, data: 'data:image/png;base64,...' }
     ]
-    
+
     await expect(
       combineImages(largeImages, { arrangement: 'horizontal', margin: 0 })
     ).rejects.toThrow('画像が大きすぎます')
@@ -782,24 +782,24 @@ describe('UploadZone', () => {
   it('ファイル選択時にonFilesSelectedが呼ばれる', () => {
     const mockOnFilesSelected = vi.fn()
     render(<UploadZone onFilesSelected={mockOnFilesSelected} />)
-    
+
     const input = screen.getByRole('button', { name: /画像を選択/ })
     const file = new File(['dummy'], 'test.jpg', { type: 'image/jpeg' })
-    
+
     fireEvent.change(input, { target: { files: [file] } })
-    
+
     expect(mockOnFilesSelected).toHaveBeenCalledWith([file])
   })
-  
+
   it('無効なファイル形式でエラーメッセージが表示される', () => {
     const mockOnFilesSelected = vi.fn()
     render(<UploadZone onFilesSelected={mockOnFilesSelected} />)
-    
+
     const input = screen.getByRole('button', { name: /画像を選択/ })
     const file = new File(['dummy'], 'test.txt', { type: 'text/plain' })
-    
+
     fireEvent.change(input, { target: { files: [file] } })
-    
+
     expect(screen.getByText(/対応形式はJPEGとPNGのみです/)).toBeInTheDocument()
     expect(mockOnFilesSelected).not.toHaveBeenCalled()
   })
@@ -815,7 +815,7 @@ import path from 'path'
 test.describe('画像結合フロー', () => {
   test('2枚の画像を横並びで結合してダウンロードできる', async ({ page }) => {
     await page.goto('/')
-    
+
     // 画像をアップロード
     const fileChooserPromise = page.waitForEvent('filechooser')
     await page.getByText('画像を選択').click()
@@ -824,49 +824,49 @@ test.describe('画像結合フロー', () => {
       path.join(__dirname, '../fixtures/images/sample1.jpg'),
       path.join(__dirname, '../fixtures/images/sample2.jpg')
     ])
-    
+
     // プレビューが表示されることを確認
     await expect(page.getByTestId('image-thumbnail')).toHaveCount(2)
-    
+
     // 横並び配置を選択
     await page.getByLabel('横並び').check()
-    
+
     // 余白を調整
     await page.getByTestId('margin-slider').fill('20')
-    
+
     // プレビューが更新されることを確認
     await expect(page.getByTestId('preview-canvas')).toBeVisible()
-    
+
     // ダウンロード
     const downloadPromise = page.waitForEvent('download')
     await page.getByText('ダウンロード').click()
     const download = await downloadPromise
-    
+
     // ファイル名が正しいことを確認
     expect(download.suggestedFilename()).toMatch(/^merged_\d{8}_\d{6}\.png$/)
   })
-  
+
   test('ドラッグ&ドロップで画像をアップロードできる', async ({ page }) => {
     await page.goto('/')
-    
+
     // ファイルをドラッグ&ドロップ
     const filePath = path.join(__dirname, '../fixtures/images/sample1.jpg')
     await page.setInputFiles('[data-testid="upload-zone"]', filePath)
-    
+
     // アップロードされた画像が表示されることを確認
     await expect(page.getByTestId('image-thumbnail')).toHaveCount(1)
   })
-  
+
   test('大きすぎるファイルでエラーメッセージが表示される', async ({ page }) => {
     await page.goto('/')
-    
+
     const fileChooserPromise = page.waitForEvent('filechooser')
     await page.getByText('画像を選択').click()
     const fileChooser = await fileChooserPromise
     await fileChooser.setFiles([
       path.join(__dirname, '../fixtures/images/large-image.jpg') // 5MB超
     ])
-    
+
     // エラーメッセージが表示されることを確認
     await expect(page.getByText('ファイルサイズは5MB以下にしてください')).toBeVisible()
   })
@@ -878,11 +878,11 @@ test.describe('クロスブラウザテスト', () => {
       const context = await browser.newContext()
       const page = await context.newPage()
       await page.goto('/')
-      
+
       // 基本的なUI要素が表示されることを確認
       await expect(page.getByText('ガゾウツナゲール')).toBeVisible()
       await expect(page.getByText('画像を選択')).toBeVisible()
-      
+
       await context.close()
     })
   })
@@ -896,12 +896,12 @@ import { test, expect } from '@playwright/test'
 
 test('UIの視覚的回帰テスト', async ({ page }) => {
   await page.goto('/')
-  
+
   // 初期状態のスクリーンショット
   await expect(page).toHaveScreenshot('initial-state.png')
-  
+
   // 画像アップロード後のスクリーンショット
-  await page.setInputFiles('[data-testid="upload-zone"]', 
+  await page.setInputFiles('[data-testid="upload-zone"]',
     'tests/fixtures/images/sample1.jpg')
   await expect(page).toHaveScreenshot('with-uploaded-image.png')
 })

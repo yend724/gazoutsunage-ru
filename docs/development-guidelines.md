@@ -252,8 +252,8 @@ const calculatePercentage = (numeratorStr: string, denominatorStr: string): Resu
 
 #### 型定義
 ```typescript
-// ✅ Good: 明示的で分かりやすい型定義
-interface ImageItem {
+// ✅ Good: type優先の型定義
+type ImageItem = {
   readonly id: string
   readonly file: File
   readonly preview: string
@@ -263,6 +263,16 @@ interface ImageItem {
 // ❌ Bad: any型の使用
 const data: any = getImageData()
 
+// ❌ Bad: オプショナルパラメータの使用
+type ImageUploaderProps = {
+  maxFiles?: number  // ❌ Bad
+}
+
+// ✅ Good: 必須パラメータとして定義
+type ImageUploaderProps = {
+  maxFiles: number  // ✅ Good: 必ず値を渡す設計
+}
+
 // ✅ Good: 適切な型注釈
 const processImages = async (images: ImageItem[]): Promise<string> => {
   // 処理
@@ -271,12 +281,12 @@ const processImages = async (images: ImageItem[]): Promise<string> => {
 
 #### 関数定義
 ```typescript
-// ✅ Good: アロー関数（純粋関数の場合）
+// ✅ Good: アロー関数を優先使用
 const calculateTotalWidth = (images: ImageItem[], margin: number): number => {
   return images.reduce((total, img) => total + img.width, 0) + margin * (images.length - 1)
 }
 
-// ✅ Good: 関数宣言（Reactコンポーネントの場合）
+// ✅ Good: Reactコンポーネントもアロー関数で定義
 const ImageThumbnail: React.FC<ImageThumbnailProps> = ({ image, onDelete }) => {
   return (
     <div className="thumbnail">
@@ -284,6 +294,16 @@ const ImageThumbnail: React.FC<ImageThumbnailProps> = ({ image, onDelete }) => {
       <button onClick={() => onDelete(image.id)}>削除</button>
     </div>
   )
+}
+
+// ❌ Bad: function宣言は使用しない
+function processImage(file: File): Promise<ImageItem> {  // ❌ Bad
+  // 処理
+}
+
+// ✅ Good: アロー関数で統一
+const processImage = async (file: File): Promise<ImageItem> => {  // ✅ Good
+  // 処理
 }
 ```
 
@@ -435,25 +455,62 @@ const AlertMessage: React.FC<AlertProps> = ({ type, message }) => (
 
 ### 3.1 ファイル・ディレクトリ命名
 
+#### 基本規則
+- ディレクトリ名: ケバブケース（例: `image-merge`）
+- コンポーネントファイル: パスカルケース（例: `ImageUploader.tsx`）
+- その他のファイル: キャメルケース（例: `useImageMerge.ts`）
+- **重要**: 各モジュールは必ず`index.ts`または`index.tsx`でエクスポートする
+
+#### エクスポート規則
+```typescript
+// ImageUploader/index.tsx
+export { ImageUploader } from './ImageUploader'
+export type { ImageUploaderProps } from './ImageUploader'
+
+// hooks/useImageMerge/index.ts
+export { useImageMerge } from './useImageMerge'
+
+// utils/canvas/index.ts
+export { mergeImages, calculateCanvasSize } from './canvas'
+export type { CanvasOptions } from './canvas'
 ```
-src/
-├── app/                          # Next.js App Router（小文字）
-├── features/                     # 機能単位（小文字）
-│   └── image-merger/            # ケバブケース
-│       ├── ui/                  # 小文字
-│       │   ├── upload-zone.tsx  # ケバブケース
-│       │   └── image-thumbnail.tsx
-│       ├── lib/                 # 小文字
-│       │   └── use-image-merger.ts
-│       └── types/
-│           └── merger.ts
-├── shared/                       # 共有レイヤー（小文字）
-│   ├── ui/
-│   ├── lib/
-│   └── types/
-└── tests/                        # テストファイル（小文字）
-    ├── fixtures/
-    └── e2e/
+
+#### ディレクトリ構造例
+```
+packages/
+└── web/
+    └── src/
+        ├── app/                      # Next.js App Router（小文字）
+        ├── views/                    # ページコンポーネント（小文字）
+        │   └── home/                # ケバブケース
+        │       ├── HomePage.tsx
+        │       └── index.tsx        # 必須: エクスポート用
+        ├── features/                 # 機能単位（小文字）
+        │   └── image-merge/         # ケバブケース
+        │       ├── ui/              # UIコンポーネント
+        │       │   ├── ImageUploader/
+        │       │   │   ├── ImageUploader.tsx
+        │       │   │   └── index.tsx
+        │       │   └── ImageList/
+        │       │       ├── ImageList.tsx
+        │       │       └── index.tsx
+        │       ├── hooks/           # カスタムフック
+        │       │   └── useImageMerge/
+        │       │       ├── useImageMerge.ts
+        │       │       └── index.ts
+        │       ├── utils/           # ユーティリティ
+        │       │   └── canvas/
+        │       │       ├── canvas.ts
+        │       │       └── index.ts
+        │       └── types/
+        │           └── index.ts
+        └── shared/                   # 共有レイヤー（小文字）
+            ├── ui/                  # 共通UIコンポーネント
+            │   └── Button/
+            │       ├── Button.tsx
+            │       └── index.tsx
+            └── styles/
+                └── globals.css
 ```
 
 ### 3.2 変数・関数命名
@@ -481,25 +538,32 @@ const useFileUpload = () => {}
 ### 3.3 型・インターフェイス命名
 
 ```typescript
-// ✅ Good: 型定義
+// ✅ Good: type優先で型定義
 type ArrangementType = 'horizontal' | 'vertical'
 type ImageFormat = 'image/jpeg' | 'image/png'
 
-// ✅ Good: インターフェイス（Props は接尾辞）
-interface ImageItem {
+// ✅ Good: type定義（Props は接尾辞）
+type ImageItem = {
   readonly id: string
   readonly file: File
   readonly preview: string
   readonly order: number
 }
 
-interface UploadZoneProps {
+// ❌ Bad: interfaceは使用しない
+interface UploadZoneProps {  // ❌ Bad
   readonly onFilesSelected: (files: File[]) => void
-  readonly maxFiles?: number
+  readonly maxFiles?: number  // ❌ Bad: オプショナル
+}
+
+// ✅ Good: type定義、オプショナル禁止
+type UploadZoneProps = {
+  readonly onFilesSelected: (files: File[]) => void
+  readonly maxFiles: number  // ✅ Good: 必須
 }
 
 // ✅ Good: エラー型（Error 接尾辞）
-interface ValidationError {
+type ValidationError = {
   readonly type: string
   readonly message: string
 }
@@ -735,28 +799,59 @@ const createImagePreview = (file: File): { preview: string; cleanup: () => void 
 ### 7.1 入力値検証
 
 ```typescript
-// ✅ Good: 厳密な型定義とバリデーション
-const validateImageFile = (file: File): Result<File, ValidationError> => {
-  // ファイルサイズチェック
-  if (file.size > MAX_FILE_SIZE) {
-    return {
-      success: false,
-      error: { type: 'FILE_TOO_LARGE', maxSize: MAX_FILE_SIZE }
-    }
-  }
+// ✅ Good: Zodによる型安全なバリデーション
+import { z } from 'zod'
+
+// スキーマ定義
+const ImageFileSchema = z.object({
+  name: z.string().transform(name => name.replace(/[<>:"/\\|?*]/g, '_')),
+  type: z.enum(['image/jpeg', 'image/png']),
+  size: z.number().max(5 * 1024 * 1024, 'ファイルサイズは5MB以下にしてください')
+})
+
+const MergeOptionsSchema = z.object({
+  arrangement: z.enum(['horizontal', 'vertical']),
+  gap: z.number().min(0).max(100)
+})
+
+// 使用例
+const validateImageFile = (file: File): Result<File, z.ZodError> => {
+  const result = ImageFileSchema.safeParse({
+    name: file.name,
+    type: file.type,
+    size: file.size
+  })
   
-  // MIMEタイプチェック
-  if (!VALID_IMAGE_FORMATS.includes(file.type as ImageFormat)) {
-    return {
-      success: false,
-      error: { type: 'INVALID_FORMAT', validFormats: VALID_IMAGE_FORMATS }
-    }
+  if (!result.success) {
+    return { success: false, error: result.error }
   }
-  
-  // ファイル名サニタイズ
-  const safeName = file.name.replace(/[<>:"/\\|?*]/g, '_')
   
   return { success: true, data: file }
+}
+
+// APIリクエストのバリデーション
+const ImageMergeRequestSchema = z.object({
+  images: z.array(z.string()).min(2).max(10),
+  options: MergeOptionsSchema
+})
+
+type ImageMergeRequest = z.infer<typeof ImageMergeRequestSchema>
+
+// フォーム入力のバリデーション
+const useImageForm = () => {
+  const [errors, setErrors] = useState<z.ZodError | null>(null)
+  
+  const validateForm = (data: unknown) => {
+    const result = ImageMergeRequestSchema.safeParse(data)
+    if (!result.success) {
+      setErrors(result.error)
+      return false
+    }
+    setErrors(null)
+    return true
+  }
+  
+  return { validateForm, errors }
 }
 ```
 

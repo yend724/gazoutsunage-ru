@@ -4,16 +4,7 @@
   "description": "ガゾウツナゲール - 画像結合アプリケーション",
   "scripts": {
     "dev": "pnpm --filter web dev",
-    "build": "pnpm --filter web build",
-    "start": "pnpm --filter web start",
-    "test": "pnpm --filter \"*\" test",
-    "test:e2e": "playwright test",
-    "lint": "pnpm --filter \"*\" lint",
-    "type-check": "pnpm --filter \"*\" type-check",
-    "clean": "pnpm --filter \"*\" clean"
+    "build": "pnpm --filter web build"
   },
-  "devDependencies": {
-    "typescript": "^5.6.0"
-  },
-  "packageManager": "pnpm@9.14.2"
+  "packageManager": "pnpm@10.27.0"
 }
