@@ -6,6 +6,26 @@ import '../shared/styles/globals.css'
 export const metadata: Metadata = {
   title: 'ガゾウツナゲール',
   description: '複数の画像を簡単に結合できるWebアプリケーション',
+  openGraph: {
+    title: 'ガゾウツナゲール',
+    description: '複数の画像を簡単に結合できるWebアプリケーション',
+    images: [
+      {
+        url: '/img/ogp.png',
+        width: 1280,
+        height: 720,
+        alt: 'ガゾウツナゲール - 複数の画像を簡単に結合',
+      },
+    ],
+    siteName: 'ガゾウツナゲール',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'ガゾウツナゲール',
+    description: '複数の画像を簡単に結合できるWebアプリケーション',
+    images: ['/img/ogp.png'],
+  },
 }
 
 type RootLayoutProps = {
