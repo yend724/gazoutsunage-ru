@@ -69,6 +69,29 @@ const MergeSettings: React.FC<MergeSettingsProps> = ({
           </div>
         </div>
 
+        {/* サイズ揃え設定 */}
+        <div>
+          <h4 className="mb-3 text-sm font-medium text-gray-12">サイズ調整</h4>
+          <label className="flex items-center">
+            <input
+              type="checkbox"
+              checked={settings.alignSize}
+              onChange={(e) => onChange({ alignSize: e.target.checked })}
+              disabled={disabled}
+              className="mr-3 h-4 w-4 border-gray-7 text-blue-9 focus:ring-blue-8 focus:ring-offset-0 rounded"
+            />
+            <div className="flex-1">
+              <span className="text-sm font-medium text-gray-12">サイズを揃える</span>
+              <p className="text-xs text-gray-11 mt-1">
+                {settings.arrangement === 'horizontal' 
+                  ? '横並び時: 高さを最小の画像に合わせる' 
+                  : '縦並び時: 幅を最小の画像に合わせる'
+                }
+              </p>
+            </div>
+          </label>
+        </div>
+
         {/* 間隔設定 */}
         <div>
           <h4 className="mb-3 text-sm font-medium text-gray-12">

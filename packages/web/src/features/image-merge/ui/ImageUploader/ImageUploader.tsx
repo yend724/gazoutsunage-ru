@@ -22,7 +22,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
   maxFileSize,
   disabled,
 }) => {
-  const validateFile = (file: File): Result<File, ImageProcessingError> => {
+  const validateFile = useCallback((file: File): Result<File, ImageProcessingError> => {
     if (file.size > maxFileSize) {
       return {
         success: false,
@@ -41,7 +41,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
     }
 
     return { success: true, data: file }
-  }
+  }, [maxFileSize])
 
   const processFiles = useCallback(
     async (files: File[]): Promise<ImageFile[]> => {

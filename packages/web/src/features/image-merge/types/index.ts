@@ -17,6 +17,7 @@ export type ImageFile = {
 export type MergeOptions = {
   readonly arrangement: ArrangementType
   readonly gap: number
+  readonly alignSize: boolean
 }
 
 export type AppState = {
@@ -48,6 +49,7 @@ export const ImageFileValidationSchema = z.object({
 export const MergeOptionsSchema = z.object({
   arrangement: z.enum(['horizontal', 'vertical']),
   gap: z.number().min(0).max(100),
+  alignSize: z.boolean(),
 })
 
 export const ImageUploadSchema = z.object({

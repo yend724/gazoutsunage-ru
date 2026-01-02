@@ -110,6 +110,7 @@ const HomePage: React.FC = () => {
           </ol>
           <div className="mt-4 text-xs text-gray-10">
             <p>※ 対応形式: JPEG、PNG</p>
+            <p>※ 出力形式: PNG（透明背景）</p>
             <p>※ すべての処理はブラウザ上で行われ、画像がサーバーに送信されることはありません</p>
             <p>※ プレビューは低解像度版ですが、ダウンロードされる画像は元の解像度で生成されます</p>
           </div>

@@ -58,3 +58,9 @@
   --color-amber-11: var(--amber-11);
   --color-amber-12: var(--amber-12);
 }
+
+@layer base {
+  button {
+    cursor: pointer;
+  }
+}

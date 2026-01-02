@@ -24,6 +24,7 @@ const useImageMerge = (): UseImageMergeReturn => {
     settings: {
       arrangement: 'horizontal',
       gap: IMAGE_CONSTRAINTS.DEFAULT_GAP,
+      alignSize: true,
     },
     isProcessing: false,
   })
@@ -121,6 +122,7 @@ const useImageMerge = (): UseImageMergeReturn => {
         settings: {
           arrangement: 'horizontal',
           gap: IMAGE_CONSTRAINTS.DEFAULT_GAP,
+          alignSize: true,
         },
         isProcessing: false,
       }

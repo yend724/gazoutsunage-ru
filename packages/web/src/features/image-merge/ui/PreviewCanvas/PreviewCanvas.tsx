@@ -34,8 +34,8 @@ const PreviewCanvas: React.FC<PreviewCanvasProps> = ({
     try {
       await mergeImages(Array.from(images), settings, canvasRef.current)
       
-      // プレビュー用のData URLを生成
-      const dataUrl = canvasRef.current.toDataURL('image/jpeg', 0.8)
+      // プレビュー用のData URLを生成（透明背景保持のためPNG）
+      const dataUrl = canvasRef.current.toDataURL('image/png')
       setPreviewUrl(dataUrl)
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : '不明なエラーが発生しました'
@@ -160,12 +160,17 @@ const PreviewCanvas: React.FC<PreviewCanvasProps> = ({
               
               <canvas
                 ref={canvasRef}
-                className={`max-w-full h-auto mx-auto block border border-gray-6 rounded-md bg-white ${
+                className={`max-w-full h-auto mx-auto block border border-gray-6 rounded-md ${
                   isLoading ? 'opacity-50' : ''
                 }`}
                 style={{
                   maxHeight: '400px',
                   objectFit: 'contain',
+                  backgroundColor: 'transparent',
+                  // チェッカーボード背景で透明度を視覚化（薄いグレー）
+                  backgroundImage: 'linear-gradient(45deg, #f8f8f8 25%, transparent 25%), linear-gradient(-45deg, #f8f8f8 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #f8f8f8 75%), linear-gradient(-45deg, transparent 75%, #f8f8f8 75%)',
+                  backgroundSize: '16px 16px',
+                  backgroundPosition: '0 0, 0 8px, 8px -8px, -8px 0px',
                 }}
               />
               
@@ -215,7 +220,8 @@ const PreviewCanvas: React.FC<PreviewCanvasProps> = ({
               <h4 className="text-sm font-medium text-blue-12">プレビューについて</h4>
               <ul className="text-xs text-blue-11 mt-2 space-y-1">
                 <li>• 表示されているプレビューは低解像度版です</li>
-                <li>• ダウンロードされる画像は元の解像度で生成されます</li>
+                <li>• チェッカーボード背景は透明部分の視覚化用です</li>
+                <li>• ダウンロードされる画像は透明背景の元解像度で生成されます</li>
                 <li>• 設定を変更するとリアルタイムでプレビューが更新されます</li>
               </ul>
             </div>

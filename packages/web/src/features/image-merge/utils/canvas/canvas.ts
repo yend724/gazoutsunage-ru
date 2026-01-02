@@ -9,6 +9,42 @@ import {
 import { loadImages } from '../image'
 
 /**
+ * 画像サイズを揃える（小さい方に合わせる）
+ */
+export const normalizeImageSizes = (
+  loadedImages: LoadedImage[],
+  options: MergeOptions
+): LoadedImage[] => {
+  if (!options.alignSize || loadedImages.length === 0) {
+    return loadedImages
+  }
+
+  if (options.arrangement === 'horizontal') {
+    // 横並び: 高さを最小値に揃える
+    const minHeight = Math.min(...loadedImages.map(img => img.height))
+    return loadedImages.map(img => {
+      const scale = minHeight / img.height
+      return {
+        ...img,
+        width: Math.round(img.width * scale),
+        height: minHeight,
+      }
+    })
+  } else {
+    // 縦並び: 幅を最小値に揃える
+    const minWidth = Math.min(...loadedImages.map(img => img.width))
+    return loadedImages.map(img => {
+      const scale = minWidth / img.width
+      return {
+        ...img,
+        width: minWidth,
+        height: Math.round(img.height * scale),
+      }
+    })
+  }
+}
+
+/**
  * 結合後のキャンバスサイズを計算する
  */
 export const calculateCanvasSize = (
@@ -19,21 +55,23 @@ export const calculateCanvasSize = (
     return { width: 0, height: 0 }
   }
 
+  // サイズ調整済みの画像を使用
+  const normalizedImages = normalizeImageSizes(loadedImages, options)
   const { arrangement, gap } = options
-  const totalGap = gap * (loadedImages.length - 1)
+  const totalGap = gap * (normalizedImages.length - 1)
 
   if (arrangement === 'horizontal') {
-    // 横並び: 幅を合計し、高さは最大値を取る
-    const totalWidth = loadedImages.reduce((sum, img) => sum + img.width, 0) + totalGap
-    const maxHeight = Math.max(...loadedImages.map(img => img.height))
+    // 横並び: 幅を合計し、高さは統一される
+    const totalWidth = normalizedImages.reduce((sum, img) => sum + img.width, 0) + totalGap
+    const height = normalizedImages[0]?.height || 0
     
-    return { width: totalWidth, height: maxHeight }
+    return { width: totalWidth, height }
   } else {
-    // 縦並び: 高さを合計し、幅は最大値を取る
-    const maxWidth = Math.max(...loadedImages.map(img => img.width))
-    const totalHeight = loadedImages.reduce((sum, img) => sum + img.height, 0) + totalGap
+    // 縦並び: 高さを合計し、幅は統一される
+    const width = normalizedImages[0]?.width || 0
+    const totalHeight = normalizedImages.reduce((sum, img) => sum + img.height, 0) + totalGap
     
-    return { width: maxWidth, height: totalHeight }
+    return { width, height: totalHeight }
   }
 }
 
@@ -47,22 +85,23 @@ export const calculateDrawPositions = (
 ): DrawPosition[] => {
   const positions: DrawPosition[] = []
   const { arrangement, gap } = options
+  
+  // サイズ調整済みの画像を使用
+  const normalizedImages = normalizeImageSizes(loadedImages, options)
 
   let currentX = 0
   let currentY = 0
 
-  for (let i = 0; i < loadedImages.length; i++) {
-    const image = loadedImages[i]!
+  for (let i = 0; i < normalizedImages.length; i++) {
+    const image = normalizedImages[i]!
 
     if (arrangement === 'horizontal') {
-      // 横並び: 垂直方向は中央揃え
-      const y = Math.max(0, (canvasSize.height - image.height) / 2)
-      positions.push({ x: currentX, y })
+      // 横並び: サイズが揃っているので上揃え
+      positions.push({ x: currentX, y: 0 })
       currentX += image.width + gap
     } else {
-      // 縦並び: 水平方向は中央揃え
-      const x = Math.max(0, (canvasSize.width - image.width) / 2)
-      positions.push({ x, y: currentY })
+      // 縦並び: サイズが揃っているので左揃え
+      positions.push({ x: 0, y: currentY })
       currentY += image.height + gap
     }
   }
@@ -76,22 +115,26 @@ export const calculateDrawPositions = (
 export const drawImagesOnCanvas = (
   ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
   loadedImages: LoadedImage[],
-  positions: DrawPosition[]
+  positions: DrawPosition[],
+  options: MergeOptions
 ): void => {
-  // 背景を白で塗りつぶし
-  ctx.fillStyle = '#ffffff'
-  ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+  // 背景は透明のまま（何もしない）
+  // デフォルトでキャンバスは透明背景
+
+  // サイズ調整済みの画像を使用
+  const normalizedImages = normalizeImageSizes(loadedImages, options)
 
   // 各画像を描画
-  loadedImages.forEach((loadedImage, index) => {
+  normalizedImages.forEach((normalizedImage, index) => {
     const position = positions[index]
-    if (position) {
+    const originalImage = loadedImages[index]
+    if (position && originalImage) {
       ctx.drawImage(
-        loadedImage.image,
+        originalImage.image,
         position.x,
         position.y,
-        loadedImage.width,
-        loadedImage.height
+        normalizedImage.width,
+        normalizedImage.height
       )
     }
   })
@@ -149,7 +192,7 @@ export const mergeImages = async (
   const positions = calculateDrawPositions(loadedImages, canvasSize, options)
 
   // 画像を描画
-  drawImagesOnCanvas(ctx, loadedImages, positions)
+  drawImagesOnCanvas(ctx, loadedImages, positions, options)
 }
 
 /**
@@ -194,7 +237,7 @@ export const mergeImagesToBlob = async (
   const positions = calculateDrawPositions(loadedImages, canvasSize, options)
 
   // 画像を描画
-  drawImagesOnCanvas(ctx, loadedImages, positions)
+  drawImagesOnCanvas(ctx, loadedImages, positions, options)
 
   // Blobとして出力
   return canvas.convertToBlob({ type: 'image/png', quality: 1.0 })
@@ -250,9 +293,8 @@ export const mergeImagesForPreview = async (
   // 描画位置を計算（スケール後のサイズで）
   const positions = calculateDrawPositions(scaledImages, previewSize, scaledOptions)
 
-  // 背景を白で塗りつぶし
-  ctx.fillStyle = '#ffffff'
-  ctx.fillRect(0, 0, previewSize.width, previewSize.height)
+  // 背景は透明のまま（プレビューも透明背景）
+  // デフォルトでキャンバスは透明背景
 
   // スケールされた画像を描画
   loadedImages.forEach((loadedImage, index) => {
@@ -269,6 +311,6 @@ export const mergeImagesForPreview = async (
     }
   })
 
-  // Blobとして出力（品質を下げてファイルサイズを削減）
-  return canvas.convertToBlob({ type: 'image/jpeg', quality: 0.8 })
+  // Blobとして出力（透明背景保持のためPNG形式）
+  return canvas.convertToBlob({ type: 'image/png' })
 }
