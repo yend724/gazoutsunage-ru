@@ -50,7 +50,11 @@ export const loadImage = (src: string): Promise<HTMLImageElement> => {
     const image = new Image()
     
     image.onload = () => resolve(image)
-    image.onerror = () => reject(new Error(`画像の読み込みに失敗しました: ${src}`))
+    image.onerror = () => {
+      // Blob URLが無効になっている可能性があるため、詳細なエラーメッセージを出力
+      console.error(`画像の読み込みエラー: ${src}`)
+      reject(new Error(`画像の読み込みに失敗しました`))
+    }
     
     image.src = src
   })
@@ -60,16 +64,23 @@ export const loadImage = (src: string): Promise<HTMLImageElement> => {
  * 複数の画像を並行して読み込む
  */
 export const loadImages = async (imagePreviews: readonly string[]): Promise<LoadedImage[]> => {
-  const loadPromises = imagePreviews.map(async (preview): Promise<LoadedImage> => {
-    const image = await loadImage(preview)
-    return {
-      image,
-      width: image.width,
-      height: image.height,
+  const loadPromises = imagePreviews.map(async (preview): Promise<LoadedImage | null> => {
+    try {
+      const image = await loadImage(preview)
+      return {
+        image,
+        width: image.width,
+        height: image.height,
+      }
+    } catch (error) {
+      console.error(`画像の読み込みをスキップ: ${preview}`, error)
+      return null
     }
   })
 
-  return Promise.all(loadPromises)
+  const results = await Promise.all(loadPromises)
+  // nullを除外して正常に読み込めた画像のみ返す
+  return results.filter((result): result is LoadedImage => result !== null)
 }
 
 /**

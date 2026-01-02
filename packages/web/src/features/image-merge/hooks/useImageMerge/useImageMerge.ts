@@ -129,12 +129,13 @@ const useImageMerge = (): UseImageMergeReturn => {
     })
   }, [])
 
-  // クリーンアップ処理
+  // コンポーネントアンマウント時のみクリーンアップ処理
   useEffect(() => {
     return () => {
       cleanupImageFiles(state.images)
     }
-  }, [state.images])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return {
     state,

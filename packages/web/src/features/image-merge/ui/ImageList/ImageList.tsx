@@ -14,9 +14,7 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
-import {
-  useSortable,
-} from '@dnd-kit/sortable'
+import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 
 import { Button } from '../../../../shared/ui/Button'
@@ -29,7 +27,7 @@ type ImageListProps = {
   readonly onRemove: (id: string) => void
 }
 
-const ImageList: React.FC<ImageListProps> = ({ images, onReorder, onRemove }) => {
+const ImageList: React.FC<ImageListProps> = React.memo(({ images, onReorder, onRemove }) => {
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -43,7 +41,7 @@ const ImageList: React.FC<ImageListProps> = ({ images, onReorder, onRemove }) =>
     if (active.id !== over?.id) {
       const oldIndex = images.findIndex(item => item.id === active.id)
       const newIndex = images.findIndex(item => item.id === over?.id)
-      
+
       const reorderedImages = arrayMove([...images], oldIndex, newIndex)
       onReorder(reorderedImages)
     }
@@ -63,46 +61,33 @@ const ImageList: React.FC<ImageListProps> = ({ images, onReorder, onRemove }) =>
         <h3 className="text-lg font-medium text-gray-12">
           アップロード済み画像 ({images.length}件)
         </h3>
-        <p className="text-sm text-gray-11">
-          ドラッグ&ドロップで順序を変更できます
-        </p>
+        <p className="text-sm text-gray-11">ドラッグ&ドロップで順序を変更できます</p>
       </div>
-      
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragEnd={handleDragEnd}
-      >
+
+      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         <SortableContext items={images.map(img => img.id)} strategy={verticalListSortingStrategy}>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {images.map(image => (
-              <SortableImageItem
-                key={image.id}
-                image={image}
-                onRemove={onRemove}
-              />
+              <SortableImageItem key={image.id} image={image} onRemove={onRemove} />
             ))}
           </div>
         </SortableContext>
       </DndContext>
     </div>
   )
-}
+})
+
+ImageList.displayName = 'ImageList'
 
 type SortableImageItemProps = {
   readonly image: ImageFile
   readonly onRemove: (id: string) => void
 }
 
-const SortableImageItem: React.FC<SortableImageItemProps> = ({ image, onRemove }) => {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id: image.id })
+const SortableImageItem: React.FC<SortableImageItemProps> = React.memo(({ image, onRemove }) => {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: image.id,
+  })
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -127,18 +112,8 @@ const SortableImageItem: React.FC<SortableImageItemProps> = ({ image, onRemove }
         {...listeners}
         className="absolute top-2 left-2 flex h-8 w-8 cursor-grab items-center justify-center rounded-full bg-blue-9 text-xs font-medium text-white hover:bg-blue-10 active:cursor-grabbing"
       >
-        <svg
-          className="h-3 w-3"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M4 8h16M4 16h16"
-          />
+        <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8h16M4 16h16" />
         </svg>
       </div>
 
@@ -157,19 +132,17 @@ const SortableImageItem: React.FC<SortableImageItemProps> = ({ image, onRemove }
         <h4 className="truncate text-sm font-medium text-gray-12" title={image.file.name}>
           {image.file.name}
         </h4>
-        
+
         <div className="text-xs text-gray-11 space-y-1">
           <p>
             サイズ: {image.dimensions.width} × {image.dimensions.height}px
           </p>
-          <p>
-            ファイルサイズ: {formatFileSize(image.file.size)}
-          </p>
+          <p>ファイルサイズ: {formatFileSize(image.file.size)}</p>
         </div>
       </div>
 
       {/* 削除ボタン */}
-      <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+      <div className="absolute top-2 right-2 transition-opacity">
         <Button
           variant="danger"
           size="sm"
@@ -177,32 +150,15 @@ const SortableImageItem: React.FC<SortableImageItemProps> = ({ image, onRemove }
           loading={false}
           onClick={handleRemove}
           type="button"
-          className="h-8 w-8 p-0"
         >
-          <span className="sr-only">削除</span>
-          <svg
-            className="h-4 w-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
+          <span>削除</span>
         </Button>
-      </div>
-
-      {/* 順序番号 */}
-      <div className="absolute bottom-2 left-2 flex h-6 w-6 items-center justify-center rounded-full bg-gray-12 text-xs font-medium text-white">
-        {image.order + 1}
       </div>
     </div>
   )
-}
+})
+
+SortableImageItem.displayName = 'SortableImageItem'
 
 export { ImageList }
 export type { ImageListProps }

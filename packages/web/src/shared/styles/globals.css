@@ -1,8 +1,5 @@
 @import 'tailwindcss';
-@import '@radix-ui/colors/gray-dark.css';
-@import '@radix-ui/colors/blue-dark.css';
-@import '@radix-ui/colors/red-dark.css';
-@import '@radix-ui/colors/amber-dark.css';
+@import '@radix-ui/themes/styles.css';
 
 @theme {
   --font-sans:

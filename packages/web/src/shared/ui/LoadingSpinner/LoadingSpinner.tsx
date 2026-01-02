@@ -8,7 +8,7 @@ type LoadingSpinnerProps = {
   label: string
 }
 
-const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
+const LoadingSpinner: React.FC<LoadingSpinnerProps> = React.memo(({
   size,
   className = '',
   label = '読み込み中...',
@@ -33,7 +33,9 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
       <span className="text-sm text-gray-11">{label}</span>
     </div>
   )
-}
+})
+
+LoadingSpinner.displayName = 'LoadingSpinner'
 
 export { LoadingSpinner }
 export type { LoadingSpinnerProps, LoadingSpinnerSize }

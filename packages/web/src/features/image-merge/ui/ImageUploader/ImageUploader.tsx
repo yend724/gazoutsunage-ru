@@ -16,7 +16,7 @@ type ImageUploaderProps = {
   readonly disabled: boolean
 }
 
-const ImageUploader: React.FC<ImageUploaderProps> = ({
+const ImageUploader: React.FC<ImageUploaderProps> = React.memo(({
   onImagesUploaded,
   maxFiles,
   maxFileSize,
@@ -178,7 +178,9 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
       </div>
     </div>
   )
-}
+})
+
+ImageUploader.displayName = 'ImageUploader'
 
 export { ImageUploader }
 export type { ImageUploaderProps }
