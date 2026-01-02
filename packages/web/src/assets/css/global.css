@@ -1,0 +1,7 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: -apple-system, 'BlinkMacSystemFont', 'Helvetica Neue', Arial,
+    'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Noto Sans JP', Meiryo,
+    sans-serif;
+}
