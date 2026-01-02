@@ -1,124 +1,60 @@
-@import "tailwindcss/preflight";
-@tailwind utilities;
+@import 'tailwindcss';
+@import '@radix-ui/colors/gray-dark.css';
+@import '@radix-ui/colors/blue-dark.css';
+@import '@radix-ui/colors/red-dark.css';
+@import '@radix-ui/colors/amber-dark.css';
 
-@layer base {
-  :root {
-    /* Light theme colors from Radix */
-    --color-background: hsl(0 0% 100%);
-    --color-foreground: hsl(206 10% 5%);
-  }
+@theme {
+  --font-sans:
+    -apple-system, 'BlinkMacSystemFont', 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN',
+    'Hiragino Sans', 'Noto Sans JP', Meiryo, sans-serif;
 
-  .dark {
-    /* Dark theme colors from Radix */
-    --color-background: hsl(206 10% 5%);
-    --color-foreground: hsl(0 0% 100%);
-  }
-
-  * {
-    @apply border-gray-6;
-  }
-
-  html {
-    @apply antialiased;
-  }
-
-  body {
-    @apply bg-gray-1 text-gray-12 transition-colors duration-200;
-  }
-
-  /* Focus styles */
-  [data-focus-visible] {
-    @apply outline-none;
-  }
-
-  [data-focus-visible-added] {
-    @apply ring-2 ring-blue-8 ring-offset-2;
-  }
-}
-
-@layer components {
-  /* Utility classes for consistent spacing */
-  .container {
-    @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
-  }
-
-  /* Card styles */
-  .card {
-    @apply rounded-lg border border-gray-6 bg-gray-2 p-6 shadow-sm;
-  }
-
-  /* Button base styles */
-  .btn {
-    @apply inline-flex items-center justify-center rounded-md font-medium transition-colors
-           focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
-  }
-
-  .btn-primary {
-    @apply btn bg-blue-9 text-white hover:bg-blue-10 focus:ring-blue-8;
-  }
-
-  .btn-secondary {
-    @apply btn bg-gray-4 text-gray-11 hover:bg-gray-5 focus:ring-gray-8;
-  }
-
-  .btn-danger {
-    @apply btn bg-red-9 text-white hover:bg-red-10 focus:ring-red-8;
-  }
-
-  /* Input styles */
-  .input {
-    @apply block w-full rounded-md border border-gray-7 bg-gray-2 px-3 py-2
-           text-gray-12 placeholder-gray-11
-           focus:border-blue-8 focus:outline-none focus:ring-2 focus:ring-blue-8;
-  }
-
-  /* Label styles */
-  .label {
-    @apply block text-sm font-medium text-gray-12;
-  }
-
-  /* Error message styles */
-  .error-message {
-    @apply mt-1 text-sm text-red-11;
-  }
-
-  /* Loading spinner */
-  .spinner {
-    @apply inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-current border-r-transparent;
-  }
-}
-
-@layer utilities {
-  /* Custom utilities */
-  .animation-delay-100 {
-    animation-delay: 100ms;
-  }
-
-  .animation-delay-200 {
-    animation-delay: 200ms;
-  }
-
-  .animation-delay-300 {
-    animation-delay: 300ms;
-  }
-
-  /* Scrollbar styles */
-  .scrollbar-thin {
-    scrollbar-width: thin;
-  }
-
-  .scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
-  }
-
-  /* Image drag prevention */
-  .no-drag {
-    -webkit-user-drag: none;
-    user-select: none;
-  }
+  --color-gray-1: var(--gray-1);
+  --color-gray-2: var(--gray-2);
+  --color-gray-3: var(--gray-3);
+  --color-gray-4: var(--gray-4);
+  --color-gray-5: var(--gray-5);
+  --color-gray-6: var(--gray-6);
+  --color-gray-7: var(--gray-7);
+  --color-gray-8: var(--gray-8);
+  --color-gray-9: var(--gray-9);
+  --color-gray-10: var(--gray-10);
+  --color-gray-11: var(--gray-11);
+  --color-gray-12: var(--gray-12);
+  --color-blue-1: var(--blue-1);
+  --color-blue-2: var(--blue-2);
+  --color-blue-3: var(--blue-3);
+  --color-blue-4: var(--blue-4);
+  --color-blue-5: var(--blue-5);
+  --color-blue-6: var(--blue-6);
+  --color-blue-7: var(--blue-7);
+  --color-blue-8: var(--blue-8);
+  --color-blue-9: var(--blue-9);
+  --color-blue-10: var(--blue-10);
+  --color-blue-11: var(--blue-11);
+  --color-blue-12: var(--blue-12);
+  --color-red-1: var(--red-1);
+  --color-red-2: var(--red-2);
+  --color-red-3: var(--red-3);
+  --color-red-4: var(--red-4);
+  --color-red-5: var(--red-5);
+  --color-red-6: var(--red-6);
+  --color-red-7: var(--red-7);
+  --color-red-8: var(--red-8);
+  --color-red-9: var(--red-9);
+  --color-red-10: var(--red-10);
+  --color-red-11: var(--red-11);
+  --color-red-12: var(--red-12);
+  --color-amber-1: var(--amber-1);
+  --color-amber-2: var(--amber-2);
+  --color-amber-3: var(--amber-3);
+  --color-amber-4: var(--amber-4);
+  --color-amber-5: var(--amber-5);
+  --color-amber-6: var(--amber-6);
+  --color-amber-7: var(--amber-7);
+  --color-amber-8: var(--amber-8);
+  --color-amber-9: var(--amber-9);
+  --color-amber-10: var(--amber-10);
+  --color-amber-11: var(--amber-11);
+  --color-amber-12: var(--amber-12);
 }

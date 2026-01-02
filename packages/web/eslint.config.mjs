@@ -31,26 +31,9 @@ const eslintConfig = defineConfig([
         "argsIgnorePattern": "^_",
         "varsIgnorePattern": "^_"
       }],
-      "@typescript-eslint/prefer-nullish-coalescing": "error",
-      "@typescript-eslint/prefer-optional-chain": "error",
       // React関連
       "react/jsx-no-useless-fragment": "error",
       "react/self-closing-comp": "error",
-      // import順序
-      "import/order": ["error", {
-        "groups": [
-          "builtin",
-          "external",
-          "internal",
-          ["parent", "sibling"],
-          "index"
-        ],
-        "newlines-between": "always",
-        "alphabetize": {
-          "order": "asc",
-          "caseInsensitive": true
-        }
-      }]
     }
   }
 ]);
