@@ -1,28 +1,41 @@
 {
-  "name": "web",
+  "name": "@gazoutsunage-ru/web",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "type-check": "tsc --noEmit",
+    "test": "vitest",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
+    "@dnd-kit/sortable": "^8.0.0",
     "@radix-ui/colors": "^3.0.0",
     "@tailwindcss/postcss": "^4.1.18",
     "next": "16.1.1",
     "postcss": "^8.5.6",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "tailwindcss": "^4.1.18"
+    "react-dropzone": "^14.3.5",
+    "tailwindcss": "^4.1.18",
+    "zod": "^3.24.1"
   },
   "devDependencies": {
+    "@playwright/test": "^1.49.1",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/react": "^16.1.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vitejs/plugin-react": "^4.3.4",
     "eslint": "^9",
     "eslint-config-next": "16.1.1",
-    "typescript": "^5"
+    "jsdom": "^26.0.0",
+    "prettier": "^3.4.2",
+    "typescript": "^5",
+    "vitest": "^2.1.8"
   }
 }

@@ -12,7 +12,47 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Test files
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx",
+    "tests/**",
+    // Config files
+    "*.config.ts",
+    "*.config.mjs",
+    "*.config.js",
   ]),
+  {
+    rules: {
+      // 開発ガイドラインに準拠
+      "@typescript-eslint/no-explicit-any": "error",
+      "@typescript-eslint/no-unused-vars": ["error", { 
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_"
+      }],
+      "@typescript-eslint/prefer-nullish-coalescing": "error",
+      "@typescript-eslint/prefer-optional-chain": "error",
+      // React関連
+      "react/jsx-no-useless-fragment": "error",
+      "react/self-closing-comp": "error",
+      // import順序
+      "import/order": ["error", {
+        "groups": [
+          "builtin",
+          "external",
+          "internal",
+          ["parent", "sibling"],
+          "index"
+        ],
+        "newlines-between": "always",
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        }
+      }]
+    }
+  }
 ]);
 
 export default eslintConfig;

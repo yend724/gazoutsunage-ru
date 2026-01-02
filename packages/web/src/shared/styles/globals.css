@@ -1,0 +1,124 @@
+@import "tailwindcss/preflight";
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Light theme colors from Radix */
+    --color-background: hsl(0 0% 100%);
+    --color-foreground: hsl(206 10% 5%);
+  }
+
+  .dark {
+    /* Dark theme colors from Radix */
+    --color-background: hsl(206 10% 5%);
+    --color-foreground: hsl(0 0% 100%);
+  }
+
+  * {
+    @apply border-gray-6;
+  }
+
+  html {
+    @apply antialiased;
+  }
+
+  body {
+    @apply bg-gray-1 text-gray-12 transition-colors duration-200;
+  }
+
+  /* Focus styles */
+  [data-focus-visible] {
+    @apply outline-none;
+  }
+
+  [data-focus-visible-added] {
+    @apply ring-2 ring-blue-8 ring-offset-2;
+  }
+}
+
+@layer components {
+  /* Utility classes for consistent spacing */
+  .container {
+    @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Card styles */
+  .card {
+    @apply rounded-lg border border-gray-6 bg-gray-2 p-6 shadow-sm;
+  }
+
+  /* Button base styles */
+  .btn {
+    @apply inline-flex items-center justify-center rounded-md font-medium transition-colors
+           focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  .btn-primary {
+    @apply btn bg-blue-9 text-white hover:bg-blue-10 focus:ring-blue-8;
+  }
+
+  .btn-secondary {
+    @apply btn bg-gray-4 text-gray-11 hover:bg-gray-5 focus:ring-gray-8;
+  }
+
+  .btn-danger {
+    @apply btn bg-red-9 text-white hover:bg-red-10 focus:ring-red-8;
+  }
+
+  /* Input styles */
+  .input {
+    @apply block w-full rounded-md border border-gray-7 bg-gray-2 px-3 py-2
+           text-gray-12 placeholder-gray-11
+           focus:border-blue-8 focus:outline-none focus:ring-2 focus:ring-blue-8;
+  }
+
+  /* Label styles */
+  .label {
+    @apply block text-sm font-medium text-gray-12;
+  }
+
+  /* Error message styles */
+  .error-message {
+    @apply mt-1 text-sm text-red-11;
+  }
+
+  /* Loading spinner */
+  .spinner {
+    @apply inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-current border-r-transparent;
+  }
+}
+
+@layer utilities {
+  /* Custom utilities */
+  .animation-delay-100 {
+    animation-delay: 100ms;
+  }
+
+  .animation-delay-200 {
+    animation-delay: 200ms;
+  }
+
+  .animation-delay-300 {
+    animation-delay: 300ms;
+  }
+
+  /* Scrollbar styles */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Image drag prevention */
+  .no-drag {
+    -webkit-user-drag: none;
+    user-select: none;
+  }
+}
