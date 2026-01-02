@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'ガゾウツナゲール',
     description: '複数の画像を簡単に結合できるWebアプリケーション',
-    images: ['/img/ogp.png'],
+    images: ['https://gazoutsunage-ru.yend.dev/img/ogp.png'],
   },
 }
 
