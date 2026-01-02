@@ -14,9 +14,9 @@ type RootLayoutProps = {
 
 const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
   return (
-    <Theme>
-      <html lang="ja" className="dark-theme">
-        <body className="min-h-screen bg-gray-1 text-gray-12">
+    <html lang="ja" className="dark-theme">
+      <body className="min-h-screen bg-gray-1 text-gray-12">
+        <Theme>
           <div className="container mx-auto px-4 py-12">
             <header className="mb-8">
               <h1 className="text-3xl font-bold text-gray-12">ガゾウツナゲール</h1>
@@ -25,9 +25,9 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
 
             <main>{children}</main>
           </div>
-        </body>
-      </html>
-    </Theme>
+        </Theme>
+      </body>
+    </html>
   )
 }
 
