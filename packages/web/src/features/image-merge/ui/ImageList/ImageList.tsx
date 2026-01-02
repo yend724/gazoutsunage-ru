@@ -119,6 +119,7 @@ const SortableImageItem: React.FC<SortableImageItemProps> = React.memo(({ image,
 
       {/* 画像プレビュー */}
       <div className="aspect-square overflow-hidden rounded-md bg-gray-4 mb-3">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={image.preview}
           alt={`プレビュー: ${image.file.name}`}
