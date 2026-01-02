@@ -9,9 +9,10 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'ガゾウツナゲール',
     description: '複数の画像を簡単に結合できるWebアプリケーション',
+    url: 'https://gazoutsunage-ru.yend.dev/',
     images: [
       {
-        url: '/img/ogp.png',
+        url: 'https://gazoutsunage-ru.yend.dev/img/ogp.png',
         width: 1280,
         height: 720,
         alt: 'ガゾウツナゲール - 複数の画像を簡単に結合',
