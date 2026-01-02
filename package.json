@@ -1,26 +1,12 @@
 {
   "name": "gazoutsunage-ru",
-  "version": "0.1.0",
   "private": true,
+  "description": "ガゾウツナゲール - 画像結合アプリケーション",
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build --turbopack",
-    "start": "next start",
-    "lint": "eslint"
+    "dev": "pnpm --filter web dev",
+    "build": "pnpm --filter web build",
+    "lint": "pnpm --filter web lint",
+    "type-check": "pnpm --filter web type-check"
   },
-  "dependencies": {
-    "destyle.css": "^4.0.1",
-    "next": "15.5.3",
-    "react": "19.1.0",
-    "react-dom": "19.1.0"
-  },
-  "devDependencies": {
-    "@eslint/eslintrc": "^3",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "15.5.3",
-    "typescript": "^5"
-  }
+  "packageManager": "pnpm@10.27.0"
 }
